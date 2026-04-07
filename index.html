@@ -135,12 +135,12 @@
   <div class="header">
     <div class="header-label">Certified Financial Planner</div>
     <h1>Corpus Planner</h1>
-    <div class="header-sub" id="headerSub">Age 37 · Owner-occupied home · All values update live</div>
+    <div class="header-sub" id="headerSub">Age 25 · Owner-occupied home · All values update live</div>
     <div class="header-pills">
-      <div class="pill"><span>Age: </span><span id="pillAge" style="color:#ce93d8;font-weight:700">37 yrs</span></div>
-      <div class="pill"><span>Income: </span><span id="pillIncome" style="color:#4fc3f7;font-weight:700">₹2.0L/mo</span></div>
-      <div class="pill"><span>Savings: </span><span id="pillSavings" style="color:#a5d6a7;font-weight:700">₹1.2L/mo</span></div>
-      <div class="pill"><span>Home Equity: </span><span id="pillEquity" style="color:#ffd54f;font-weight:700">₹10.0L</span></div>
+      <div class="pill"><span>Age: </span><span id="pillAge" style="color:#ce93d8;font-weight:700">25 yrs</span></div>
+      <div class="pill"><span>Income: </span><span id="pillIncome" style="color:#4fc3f7;font-weight:700">₹1.0L/mo</span></div>
+      <div class="pill"><span>Savings: </span><span id="pillSavings" style="color:#a5d6a7;font-weight:700">₹30.0K/mo</span></div>
+      <div class="pill"><span>Home Equity: </span><span id="pillEquity" style="color:#ffd54f;font-weight:700">₹50.0L</span></div>
     </div>
   </div>
 
@@ -163,7 +163,7 @@
         <div class="metric-box" style="border-color:#4fc3f733">
           <div class="metric-label">Retire At</div>
           <div class="metric-val" style="color:#4fc3f7" id="snapRetireAt">Age 55</div>
-          <div class="metric-sub" id="snapYearsAway">18 yrs away</div>
+          <div class="metric-sub" id="snapYearsAway">30 yrs away</div>
         </div>
         <div class="metric-box" style="border-color:#f9a82533">
           <div class="metric-label">Retirement Corpus</div>
@@ -200,14 +200,14 @@
       <div class="card-title"><span>🏠</span><h2 style="color:#ffd54f">Income & Home</h2></div>
 
       <div class="slider-wrap">
-        <div class="slider-row"><span class="slider-label">Current Age</span><span class="slider-val" id="ageVal" style="color:#ce93d8">37 years old</span></div>
-        <input type="range" id="ageSlider" min="22" max="55" step="1" value="37" style="accent-color:#ce93d8" oninput="onAgeChange(this.value)">
+        <div class="slider-row"><span class="slider-label">Current Age</span><span class="slider-val" id="ageVal" style="color:#ce93d8">25 years old</span></div>
+        <input type="range" id="ageSlider" min="22" max="55" step="1" value="25" style="accent-color:#ce93d8" oninput="onAgeChange(this.value)">
         <div class="slider-limits"><span>22 years old</span><span>55 years old</span></div>
       </div>
 
       <div class="slider-wrap">
         <div class="slider-row"><span class="slider-label">Monthly Take-Home Salary</span><span class="slider-val" id="incomeVal" style="color:#ffd54f">₹1.0L</span></div>
-        <input type="range" id="incomeSlider" min="100000" max="1000000" step="25000" value="400000" style="accent-color:#ffd54f" oninput="recalc()">
+        <input type="range" id="incomeSlider" min="100000" max="1000000" step="25000" value="100000" style="accent-color:#ffd54f" oninput="recalc()">
         <div class="slider-limits"><span>₹1.0L</span><span>₹10.0L</span></div>
       </div>
 
@@ -289,8 +289,8 @@
         <div class="slider-limits"><span>6%</span><span>10%</span></div>
       </div>
       <div class="slider-wrap">
-        <div class="slider-row"><span class="slider-label">Existing Investments</span><span class="slider-val" id="existingVal" style="color:#ce93d8">₹25.0L</span></div>
-        <input type="range" id="existingSlider" min="0" max="10000000" step="100000" value="2500000" style="accent-color:#ce93d8" oninput="recalc()">
+        <div class="slider-row"><span class="slider-label">Existing Investments</span><span class="slider-val" id="existingVal" style="color:#ce93d8">₹0</span></div>
+        <input type="range" id="existingSlider" min="0" max="10000000" step="100000" value="0" style="accent-color:#ce93d8" oninput="recalc()">
         <div class="slider-limits"><span>₹0</span><span>₹1.00Cr</span></div>
       </div>
     </div>
@@ -307,17 +307,17 @@
         <div class="slider-limits"><span>Age 45</span><span>Age 65</span></div>
       </div>
       <div class="slider-wrap">
-        <div class="slider-row"><span class="slider-label">Current Monthly Expenses</span><span class="slider-val" id="monthlyExpVal" style="color:#4fc3f7">₹1.5L</span></div>
-        <input type="range" id="monthlyExpSlider" min="50000" max="500000" step="10000" value="150000" style="accent-color:#4fc3f7" oninput="recalc()">
+        <div class="slider-row"><span class="slider-label">Current Monthly Expenses</span><span class="slider-val" id="monthlyExpVal" style="color:#4fc3f7">₹70.0K</span></div>
+        <input type="range" id="monthlyExpSlider" min="50000" max="500000" step="10000" value="70000" style="accent-color:#4fc3f7" oninput="recalc()">
         <div class="slider-limits"><span>₹50K</span><span>₹5.0L</span></div>
       </div>
 
       <div class="data-table">
         <div class="data-label">Retirement Calculator</div>
-        <div class="data-row"><span class="data-key">Current Age</span><span class="data-val" id="rCurAge">37 years</span></div>
-        <div class="data-row"><span class="data-key">Retire At</span><span class="data-val" id="rRetireAt">Age 55 (18 years from now)</span></div>
+        <div class="data-row"><span class="data-key">Current Age</span><span class="data-val" id="rCurAge">25 years</span></div>
+        <div class="data-row"><span class="data-key">Retire At</span><span class="data-val" id="rRetireAt">Age 55 (30 years from now)</span></div>
         <div class="data-row"><span class="data-key">Retirement Duration</span><span class="data-val" id="rDuration">30 years (till age 85)</span></div>
-        <div class="data-row"><span class="data-key">Monthly Expenses Today</span><span class="data-val" id="rExpToday">₹1.5L</span></div>
+        <div class="data-row"><span class="data-key">Monthly Expenses Today</span><span class="data-val" id="rExpToday">₹70.0K</span></div>
         <div class="data-row"><span class="data-key">Monthly Expenses at Retirement</span><span class="data-val" id="rExpRetire">—</span></div>
         <div class="data-row"><span class="data-key">Annual Expenses at Retirement</span><span class="data-val" id="rExpAnnual">—</span></div>
         <div class="data-row"><span class="data-key">Corpus Required</span><span class="data-val" id="rCorpusReq">—</span></div>
