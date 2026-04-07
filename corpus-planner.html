@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Corpus Planner — CFP</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Mono', 'Courier New', monospace;
+    background: #060e18;
+    color: #c8dde8;
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+  }
+
+  .container { max-width: 700px; margin: 0 auto; }
+
+  /* HEADER */
+  .header { border-bottom: 1px solid #1a2535; padding-bottom: 20px; margin-bottom: 24px; }
+  .header-label { font-size: 10px; color: #4fc3f7; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 6px; }
+  .header h1 { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; color: #e8f4ff; line-height: 1.2; }
+  .header-sub { margin-top: 8px; font-size: 12px; color: #556677; }
+  .header-pills { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .pill { background: #0a1e30; border: 1px solid #1a3550; border-radius: 8px; padding: 6px 14px; font-size: 11px; }
+  .pill span:first-child { color: #667788; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 24px; }
+  .tab-btn {
+    padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.05em;
+    font-family: 'DM Mono', monospace;
+    background: #111e2b; color: #556677; transition: all 0.2s;
+  }
+  .tab-btn.active { background: #4fc3f7; color: #000; }
+
+  /* TAB PANELS */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* SECTION CARD */
+  .card {
+    background: #0f1923; border-radius: 12px;
+    padding: 20px 24px; margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-left-width: 3px; border-left-style: solid;
+  }
+  .card-title { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .card-title span { font-size: 20px; }
+  .card-title h2 { font-size: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* SLIDER */
+  .slider-wrap { margin-bottom: 16px; }
+  .slider-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .slider-label { font-size: 12px; color: #8899aa; letter-spacing: 0.04em; }
+  .slider-val { font-size: 13px; font-weight: 700; }
+  .slider-limits { display: flex; justify-content: space-between; font-size: 10px; color: #445566; margin-top: 2px; }
+  input[type=range] { width: 100%; cursor: pointer; height: 4px; border-radius: 99px; outline: none; border: none; }
+
+  /* METRIC BOXES */
+  .metrics { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+  .metric-box {
+    background: #07111c; border-radius: 10px; padding: 14px 16px;
+    flex: 1; min-width: 120px; border: 1px solid transparent;
+  }
+  .metric-label { font-size: 10px; color: #667788; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+  .metric-val { font-size: 18px; font-weight: 800; }
+  .metric-sub { font-size: 10px; color: #556677; margin-top: 4px; }
+
+  /* PROGRESS BAR */
+  .progress-wrap { margin-bottom: 14px; }
+  .progress-top { display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .progress-track { background: #1a2535; border-radius: 99px; height: 6px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 99px; transition: width 0.4s ease; }
+  .progress-bottom { display: flex; justify-content: space-between; margin-top: 4px; font-size: 10px; color: #445566; }
+
+  /* TABLE ROWS */
+  .data-table { background: #07111c; border-radius: 10px; padding: 16px; margin-top: 8px; }
+  .data-label { font-size: 11px; color: #445566; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 12px; }
+  .data-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #0d1e2e; }
+  .data-row:last-child { border-bottom: none; }
+  .data-key { font-size: 12px; color: #667788; }
+  .data-val { font-size: 12px; font-weight: 700; color: #c8dde8; }
+
+  /* INSIGHT BOX */
+  .insight { border-radius: 10px; padding: 16px; margin-top: 16px; }
+  .insight-title { font-size: 11px; margin-bottom: 10px; letter-spacing: 0.06em; }
+  .insight p { font-size: 12px; color: #8899aa; line-height: 1.7; }
+  .insight p b { color: #c8dde8; font-weight: 600; }
+
+  /* ALLOC BAR */
+  .alloc-wrap { margin-bottom: 14px; }
+  .alloc-top { display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .alloc-track { background: #1a2535; border-radius: 99px; height: 8px; overflow: hidden; }
+  .alloc-fill { height: 100%; border-radius: 99px; }
+
+  /* TOGGLE BUTTON */
+  .toggle-btn {
+    border: none; border-radius: 6px; padding: 4px 14px;
+    font-size: 12px; font-weight: 700; cursor: pointer;
+    font-family: 'DM Mono', monospace; transition: all 0.2s;
+  }
+
+  /* DISCLAIMER */
+  .disclaimer {
+    margin-top: 24px; padding: 16px; background: #070f18;
+    border-radius: 10px; border: 1px solid #1a2535;
+    font-size: 10px; color: #334455; line-height: 1.8;
+  }
+  .disclaimer b { color: #445566; }
+
+  /* VEHICLE TABLE */
+  .vehicle-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #0d1e2e; }
+  .vehicle-key { font-size: 11px; font-weight: 700; min-width: 120px; }
+  .vehicle-val { font-size: 11px; color: #667788; text-align: right; }
+
+  /* CHILD TOGGLE ROW */
+  .child-toggle { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .child-toggle span { font-size: 12px; color: #8899aa; }
+
+  @media (max-width: 480px) {
+    .metrics { flex-direction: column; }
+    .metric-box { min-width: unset; }
+    .header h1 { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-label">Certified Financial Planner</div>
+    <h1>Corpus Planner</h1>
+    <div class="header-sub" id="headerSub">Age 37 · Owner-occupied home · All values update live</div>
+    <div class="header-pills">
+      <div class="pill"><span>Age: </span><span id="pillAge" style="color:#ce93d8;font-weight:700">37 yrs</span></div>
+      <div class="pill"><span>Income: </span><span id="pillIncome" style="color:#4fc3f7;font-weight:700">₹4.0L/mo</span></div>
+      <div class="pill"><span>Savings: </span><span id="pillSavings" style="color:#a5d6a7;font-weight:700">₹1.2L/mo</span></div>
+      <div class="pill"><span>Home Equity: </span><span id="pillEquity" style="color:#ffd54f;font-weight:700">₹50.0L</span></div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('overview')">Overview</button>
+    <button class="tab-btn" onclick="showTab('retirement')">Retirement</button>
+    <button class="tab-btn" onclick="showTab('child')">Child Goals</button>
+    <button class="tab-btn" onclick="showTab('fire')">FIRE</button>
+    <button class="tab-btn" onclick="showTab('allocation')">Allocation</button>
+  </div>
+
+  <!-- ═══ OVERVIEW TAB ═══ -->
+  <div class="tab-panel active" id="tab-overview">
+
+    <!-- Snapshot -->
+    <div class="card" style="border-color:#4fc3f733;border-left-color:#4fc3f7">
+      <div class="card-title"><span>📊</span><h2 style="color:#4fc3f7">Your Financial Snapshot</h2></div>
+      <div class="metrics">
+        <div class="metric-box" style="border-color:#4fc3f733">
+          <div class="metric-label">Retire At</div>
+          <div class="metric-val" style="color:#4fc3f7" id="snapRetireAt">Age 55</div>
+          <div class="metric-sub" id="snapYearsAway">18 yrs away</div>
+        </div>
+        <div class="metric-box" style="border-color:#f9a82533">
+          <div class="metric-label">Retirement Corpus</div>
+          <div class="metric-val" style="color:#f9a825" id="snapCorpus">—</div>
+          <div class="metric-sub">Required</div>
+        </div>
+        <div class="metric-box" style="border-color:#a5d6a733">
+          <div class="metric-label">SIP Needed</div>
+          <div class="metric-val" style="color:#a5d6a7" id="snapSIP">—</div>
+          <div class="metric-sub">Per month total</div>
+        </div>
+      </div>
+      <div style="margin-top:16px">
+        <div class="progress-wrap">
+          <div class="progress-top"><span style="font-size:12px;color:#8899aa">Retirement Corpus</span><span style="font-size:11px;color:#4fc3f7" id="progRetirePct">0% funded</span></div>
+          <div class="progress-track"><div class="progress-fill" id="progRetireBar" style="background:linear-gradient(90deg,#4fc3f788,#4fc3f7);width:0%"></div></div>
+          <div class="progress-bottom"><span id="progRetireCur">Current: —</span><span id="progRetireTgt">Target: —</span></div>
+        </div>
+        <div class="progress-wrap" id="progEducWrap">
+          <div class="progress-top"><span style="font-size:12px;color:#8899aa">Child Education</span><span style="font-size:11px;color:#f9a825" id="progEducPct">0% funded</span></div>
+          <div class="progress-track"><div class="progress-fill" id="progEducBar" style="background:linear-gradient(90deg,#f9a82588,#f9a825);width:0%"></div></div>
+          <div class="progress-bottom"><span>Current: ₹0</span><span id="progEducTgt">Target: —</span></div>
+        </div>
+        <div class="progress-wrap" id="progMarriageWrap">
+          <div class="progress-top"><span style="font-size:12px;color:#8899aa">Child Marriage</span><span style="font-size:11px;color:#ce93d8" id="progMarriagePct">0% funded</span></div>
+          <div class="progress-track"><div class="progress-fill" id="progMarriageBar" style="background:linear-gradient(90deg,#ce93d888,#ce93d8);width:0%"></div></div>
+          <div class="progress-bottom"><span>Current: ₹0</span><span id="progMarriageTgt">Target: —</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Income & Home -->
+    <div class="card" style="border-color:#ffd54f33;border-left-color:#ffd54f">
+      <div class="card-title"><span>🏠</span><h2 style="color:#ffd54f">Income & Home</h2></div>
+
+      <div class="slider-wrap">
+        <div class="slider-row"><span class="slider-label">Current Age</span><span class="slider-val" id="ageVal" style="color:#ce93d8">37 years old</span></div>
+        <input type="range" id="ageSlider" min="22" max="55" step="1" value="37" style="accent-color:#ce93d8" oninput="onAgeChange(this.value)">
+        <div class="slider-limits"><span>22 years old</span><span>55 years old</span></div>
+      </div>
+
+      <div class="slider-wrap">
+        <div class="slider-row"><span class="slider-label">Monthly Take-Home Salary</span><span class="slider-val" id="incomeVal" style="color:#ffd54f">₹4.0L</span></div>
+        <input type="range" id="incomeSlider" min="100000" max="1000000" step="25000" value="400000" style="accent-color:#ffd54f" oninput="recalc()">
+        <div class="slider-limits"><span>₹1.0L</span><span>₹10.0L</span></div>
+      </div>
+
+      <div class="slider-wrap">
+        <div class="slider-row"><span class="slider-label">Home Market Value</span><span class="slider-val" id="homeValDisp" style="color:#ffd54f">₹80.0L</span></div>
+        <input type="range" id="homeValueSlider" min="2000000" max="50000000" step="500000" value="8000000" style="accent-color:#ffd54f" oninput="recalc()">
+        <div class="slider-limits"><span>₹20.0L</span><span>₹5.00Cr</span></div>
+      </div>
+
+      <div class="slider-wrap">
+        <div class="slider-row"><span class="slider-label">Outstanding Home Loan</span><span class="slider-val" id="loanVal" style="color:#ef9a9a">₹30.0L</span></div>
+        <input type="range" id="loanSlider" min="0" max="20000000" step="100000" value="3000000" style="accent-color:#ef9a9a" oninput="recalc()">
+        <div class="slider-limits"><span>₹0</span><span>₹2.00Cr</span></div>
+      </div>
+
+      <div class="metrics" style="margin-top:4px">
+        <div class="metric-box" style="border-color:#ffd54f33">
+          <div class="metric-label">Home Equity</div>
+          <div class="metric-val" style="color:#ffd54f" id="mHomeEquity">₹50.0L</div>
+          <div class="metric-sub">Value − Loan</div>
+        </div>
+        <div class="metric-box" style="border-color:#a5d6a733">
+          <div class="metric-label">Loan-to-Value</div>
+          <div class="metric-val" id="mLTV" style="color:#a5d6a7">38%</div>
+          <div class="metric-sub" id="mLTVsub">Healthy LTV</div>
+        </div>
+        <div class="metric-box" style="border-color:#4fc3f733">
+          <div class="metric-label">Net Worth (excl. invest)</div>
+          <div class="metric-val" style="color:#4fc3f7" id="mNetWorth">₹75.0L</div>
+          <div class="metric-sub">Home equity + corpus</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Savings Allocation -->
+    <div class="card" style="border-color:#a5d6a733;border-left-color:#a5d6a7">
+      <div class="card-title"><span>💰</span><h2 style="color:#a5d6a7">Savings Allocation</h2></div>
+      <div class="slider-wrap">
+        <div class="slider-row"><span class="slider-label">Monthly Savings %</span><span class="slider-val" id="savPctVal" style="color:#a5d6a7">30% = ₹1.2L</span></div>
+        <input type="range" id="savingsPctSlider" min="20" max="60" step="5" value="30" style="accent-color:#a5d6a7" oninput="recalc()">
+        <div class="slider-limits"><span>20%</span><span>60%</span></div>
+      </div>
+      <div class="metrics">
+        <div class="metric-box" style="border-color:#a5d6a733">
+          <div class="metric-label">Available to Invest</div>
+          <div class="metric-val" style="color:#a5d6a7" id="mAvail">₹1.2L</div>
+          <div class="metric-sub">Per month</div>
+        </div>
+        <div class="metric-box" style="border-color:#f9a82533">
+          <div class="metric-label">Total SIP Needed</div>
+          <div class="metric-val" style="color:#f9a825" id="mTotalSIP">—</div>
+          <div class="metric-sub">All goals</div>
+        </div>
+        <div class="metric-box" id="surplusBox" style="border-color:#4fc3f733">
+          <div class="metric-label" id="surplusLabel">Monthly Surplus</div>
+          <div class="metric-val" id="surplusVal" style="color:#4fc3f7">—</div>
+          <div class="metric-sub" id="surplusSub">Can invest more</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key Assumptions -->
+    <div class="card" style="border-color:#ce93d833;border-left-color:#ce93d8">
+      <div class="card-title"><span>⚙️</span><h2 style="color:#ce93d8">Key Assumptions</h2></div>
+
+      <div class="slider-wrap">
+        <div class="slider-row"><span class="slider-label">Inflation Rate</span><span class="slider-val" id="inflVal" style="color:#ce93d8">6%</span></div>
+        <input type="range" id="inflationSlider" min="4" max="9" step="0.5" value="6" style="accent-color:#ce93d8" oninput="recalc()">
+        <div class="slider-limits"><span>4%</span><span>9%</span></div>
+      </div>
+      <div class="slider-wrap">
+        <div class="slider-row"><span class="slider-label">Pre-retirement Return</span><span class="slider-val" id="returnVal" style="color:#ce93d8">12%</span></div>
+        <input type="range" id="returnSlider" min="8" max="15" step="0.5" value="12" style="accent-color:#ce93d8" oninput="recalc()">
+        <div class="slider-limits"><span>8%</span><span>15%</span></div>
+      </div>
+      <div class="slider-wrap">
+        <div class="slider-row"><span class="slider-label">Post-retirement Return</span><span class="slider-val" id="postReturnVal" style="color:#ce93d8">8%</span></div>
+        <input type="range" id="postReturnSlider" min="6" max="10" step="0.5" value="8" style="accent-color:#ce93d8" oninput="recalc()">
+        <div class="slider-limits"><span>6%</span><span>10%</span></div>
+      </div>
+      <div class="slider-wrap">
+        <div class="slider-row"><span class="slider-label">Existing Investments</span><span class="slider-val" id="existingVal" style="color:#ce93d8">₹25.0L</span></div>
+        <input type="range" id="existingSlider" min="0" max="10000000" step="100000" value="2500000" style="accent-color:#ce93d8" oninput="recalc()">
+        <div class="slider-limits"><span>₹0</span><span>₹1.00Cr</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ RETIREMENT TAB ═══ -->
+  <div class="tab-panel" id="tab-retirement">
+    <div class="card" style="border-color:#4fc3f733;border-left-color:#4fc3f7">
+      <div class="card-title"><span>🏖️</span><h2 style="color:#4fc3f7">Retirement Planning</h2></div>
+
+      <div class="slider-wrap">
+        <div class="slider-row"><span class="slider-label">Target Retirement Age</span><span class="slider-val" id="retireAgeVal" style="color:#4fc3f7">Age 55 (18 yrs)</span></div>
+        <input type="range" id="retireAgeSlider" min="45" max="65" step="1" value="55" style="accent-color:#4fc3f7" oninput="recalc()">
+        <div class="slider-limits"><span>Age 45</span><span>Age 65</span></div>
+      </div>
+      <div class="slider-wrap">
+        <div class="slider-row"><span class="slider-label">Current Monthly Expenses</span><span class="slider-val" id="monthlyExpVal" style="color:#4fc3f7">₹1.5L</span></div>
+        <input type="range" id="monthlyExpSlider" min="50000" max="500000" step="10000" value="150000" style="accent-color:#4fc3f7" oninput="recalc()">
+        <div class="slider-limits"><span>₹50K</span><span>₹5.0L</span></div>
+      </div>
+
+      <div class="data-table">
+        <div class="data-label">Retirement Calculator</div>
+        <div class="data-row"><span class="data-key">Current Age</span><span class="data-val" id="rCurAge">37 years</span></div>
+        <div class="data-row"><span class="data-key">Retire At</span><span class="data-val" id="rRetireAt">Age 55 (18 years from now)</span></div>
+        <div class="data-row"><span class="data-key">Retirement Duration</span><span class="data-val" id="rDuration">30 years (till age 85)</span></div>
+        <div class="data-row"><span class="data-key">Monthly Expenses Today</span><span class="data-val" id="rExpToday">₹1.5L</span></div>
+        <div class="data-row"><span class="data-key">Monthly Expenses at Retirement</span><span class="data-val" id="rExpRetire">—</span></div>
+        <div class="data-row"><span class="data-key">Annual Expenses at Retirement</span><span class="data-val" id="rExpAnnual">—</span></div>
+        <div class="data-row"><span class="data-key">Corpus Required</span><span class="data-val" id="rCorpusReq">—</span></div>
+        <div class="data-row"><span class="data-key">FV of Existing Investments</span><span class="data-val" id="rCorpusFV">—</span></div>
+        <div class="data-row"><span class="data-key">Additional Corpus Needed</span><span class="data-val" id="rShortfall">—</span></div>
+        <div class="data-row"><span class="data-key">Monthly SIP Required</span><span class="data-val" id="rSIP" style="color:#4fc3f7">—</span></div>
+      </div>
+
+      <div class="insight" style="background:#07111c;border:1px solid #4fc3f722">
+        <div class="insight-title" style="color:#4fc3f7">💡 CFP INSIGHT</div>
+        <p id="retireInsight">—</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ CHILD TAB ═══ -->
+  <div class="tab-panel" id="tab-child">
+    <div class="card" style="border-color:#f9a82533;border-left-color:#f9a825">
+      <div class="card-title"><span>🎓</span><h2 style="color:#f9a825">Child Education & Marriage</h2></div>
+
+      <div class="child-toggle">
+        <span>Plan for Child?</span>
+        <button class="toggle-btn" id="childToggleBtn" onclick="toggleChild()" style="background:#f9a825;color:#000">YES</button>
+      </div>
+
+      <div id="childContent">
+        <div class="slider-wrap">
+          <div class="slider-row"><span class="slider-label">Years until child is born</span><span class="slider-val" id="childYrsVal" style="color:#f9a825">2 yrs from now</span></div>
+          <input type="range" id="childYrsSlider" min="1" max="5" step="1" value="2" style="accent-color:#f9a825" oninput="recalc()">
+          <div class="slider-limits"><span>1 yr</span><span>5 yrs</span></div>
+        </div>
+        <div class="slider-wrap">
+          <div class="slider-row"><span class="slider-label">Education Cost (Today's Value)</span><span class="slider-val" id="educCostVal" style="color:#f9a825">₹50.0L</span></div>
+          <input type="range" id="educCostSlider" min="1000000" max="20000000" step="500000" value="5000000" style="accent-color:#f9a825" oninput="recalc()">
+          <div class="slider-limits"><span>₹10.0L</span><span>₹2.00Cr</span></div>
+        </div>
+        <div class="slider-wrap">
+          <div class="slider-row"><span class="slider-label">Marriage Cost (Today's Value)</span><span class="slider-val" id="marriageCostVal" style="color:#ce93d8">₹30.0L</span></div>
+          <input type="range" id="marriageCostSlider" min="500000" max="10000000" step="500000" value="3000000" style="accent-color:#ce93d8" oninput="recalc()">
+          <div class="slider-limits"><span>₹5.0L</span><span>₹1.00Cr</span></div>
+        </div>
+
+        <div class="data-table">
+          <div class="data-label">Child Goals Calculator</div>
+          <div class="data-row"><span class="data-key">Child born in</span><span class="data-val" id="cBornIn">~2 year(s) from now</span></div>
+          <div class="data-row"><span class="data-key">Education at age 18</span><span class="data-val" id="cEducYrs">20 years from now</span></div>
+          <div class="data-row"><span class="data-key">Education Corpus Needed</span><span class="data-val" id="cEducCorpus">—</span></div>
+          <div class="data-row"><span class="data-key">Monthly SIP for Education</span><span class="data-val" id="cEducSIP" style="color:#f9a825">—</span></div>
+          <div class="data-row"><span class="data-key">Marriage at age 25</span><span class="data-val" id="cMarriageYrs">27 years from now</span></div>
+          <div class="data-row"><span class="data-key">Marriage Corpus Needed</span><span class="data-val" id="cMarriageCorpus">—</span></div>
+          <div class="data-row"><span class="data-key">Monthly SIP for Marriage</span><span class="data-val" id="cMarriageSIP" style="color:#ce93d8">—</span></div>
+          <div class="data-row"><span class="data-key">Total SIP for Child Goals</span><span class="data-val" id="cTotalSIP" style="color:#f9a825">—</span></div>
+        </div>
+
+        <div class="insight" style="background:#07111c;border:1px solid #f9a82522">
+          <div class="insight-title" style="color:#f9a825">💡 CFP INSIGHT</div>
+          <p>Start a dedicated child SIP as soon as the child is born. Consider <b>Sukanya Samriddhi Yojana</b> (if girl child) for the marriage goal — it offers ~8% tax-free returns. For education, use aggressive equity allocation now, shifting to debt 3 years before the goal.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ FIRE TAB ═══ -->
+  <div class="tab-panel" id="tab-fire">
+    <div class="card" style="border-color:#ef535033;border-left-color:#ef5350">
+      <div class="card-title"><span>🔥</span><h2 style="color:#ef5350">FIRE — Financial Independence</h2></div>
+
+      <div class="data-table">
+        <div class="data-label">The 25x Rule (4% Safe Withdrawal Rate)</div>
+        <div class="data-row"><span class="data-key">Annual Expenses at Retirement</span><span class="data-val" id="fAnnualExp">—</span></div>
+        <div class="data-row"><span class="data-key">FIRE Corpus Needed (25x)</span><span class="data-val" id="fFireCorpus">—</span></div>
+        <div class="data-row"><span class="data-key">FV of Existing Investments</span><span class="data-val" id="fCorpusFV">—</span></div>
+        <div class="data-row"><span class="data-key">Additional Corpus Needed</span><span class="data-val" id="fShortfall">—</span></div>
+        <div class="data-row"><span class="data-key">Monthly SIP for FIRE</span><span class="data-val" id="fSIP" style="color:#ef5350">—</span></div>
+        <div class="data-row"><span class="data-key">With Child Goals Added</span><span class="data-val" id="fTotalSIP">—</span></div>
+      </div>
+
+      <div class="metrics" style="margin-top:16px">
+        <div class="metric-box" style="border-color:#ef535033">
+          <div class="metric-label">FIRE Corpus</div>
+          <div class="metric-val" style="color:#ef5350" id="fmFireCorpus">—</div>
+          <div class="metric-sub">25x annual expenses</div>
+        </div>
+        <div class="metric-box" style="border-color:#f9a82533">
+          <div class="metric-label">SIP Required</div>
+          <div class="metric-val" style="color:#f9a825" id="fmSIP">—</div>
+          <div class="metric-sub">For FIRE alone</div>
+        </div>
+        <div class="metric-box" style="border-color:#a5d6a733">
+          <div class="metric-label">Savings Available</div>
+          <div class="metric-val" style="color:#a5d6a7" id="fmSavings">—</div>
+          <div class="metric-sub" id="fmSavingsSub">at chosen %</div>
+        </div>
+      </div>
+
+      <div class="slider-wrap" style="margin-top:16px">
+        <div class="slider-row"><span class="slider-label">Savings % for FIRE scenario</span><span class="slider-val" id="fireSavPctVal" style="color:#ef5350">40% = ₹1.6L/mo</span></div>
+        <input type="range" id="fireSavPctSlider" min="25" max="60" step="5" value="40" style="accent-color:#ef5350" oninput="recalc()">
+        <div class="slider-limits"><span>25%</span><span>60%</span></div>
+      </div>
+
+      <div class="insight" style="background:#07111c;border:1px solid #ef535022">
+        <div class="insight-title" style="color:#ef5350">💡 CFP INSIGHT</div>
+        <p id="fireInsight">—</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ALLOCATION TAB ═══ -->
+  <div class="tab-panel" id="tab-allocation">
+    <div class="card" style="border-color:#81d4fa33;border-left-color:#81d4fa">
+      <div class="card-title"><span>🧩</span><h2 style="color:#81d4fa">Recommended Portfolio Allocation</h2></div>
+
+      <div id="allocBars"></div>
+
+      <div class="data-table" style="margin-top:4px">
+        <div class="data-label">Suggested Investment Vehicles</div>
+        <div class="vehicle-row"><span class="vehicle-key" style="color:#4fc3f7">Large Cap Equity</span><span class="vehicle-val">Nifty 50 Index Fund / UTI Nifty 50</span></div>
+        <div class="vehicle-row"><span class="vehicle-key" style="color:#81d4fa">Mid/Small Cap</span><span class="vehicle-val">Parag Parikh Flexi + Nippon Small Cap</span></div>
+        <div class="vehicle-row"><span class="vehicle-key" style="color:#29b6f6">International</span><span class="vehicle-val">Motilal Oswal S&P 500 / Nasdaq 100 FOF</span></div>
+        <div class="vehicle-row"><span class="vehicle-key" style="color:#f9a825">Debt</span><span class="vehicle-val">PPF (max ₹1.5L/yr) + ICICI Pru Corp Bond</span></div>
+        <div class="vehicle-row"><span class="vehicle-key" style="color:#ffd54f">Gold</span><span class="vehicle-val">Sovereign Gold Bonds (SGB) via RBI</span></div>
+        <div class="vehicle-row" style="border-bottom:none"><span class="vehicle-key" style="color:#a5d6a7">Emergency</span><span class="vehicle-val">Liquid Fund / High-yield SB Account</span></div>
+      </div>
+
+      <div class="insight" style="background:#07111c;border:1px solid #81d4fa22;margin-top:16px">
+        <div class="insight-title" style="color:#81d4fa">💡 CFP INSIGHT — Tax Optimization</div>
+        <p>
+          • <b>ELSS funds</b> — save ₹46,800 tax under 80C (30% bracket)<br>
+          • <b>PPF</b> — EEE status (exempt at all 3 stages)<br>
+          • <b>NPS Tier 1</b> — extra ₹50,000 deduction under 80CCD(1B)<br>
+          • <b>LTCG harvesting</b> — book ₹1.25L gains annually (tax-free)<br>
+          • <b>SGBs</b> — capital gains tax-free on maturity
+        </p>
+      </div>
+    </div>
+
+    <div class="card" style="border-color:#a5d6a733;border-left-color:#a5d6a7">
+      <div class="card-title"><span>📋</span><h2 style="color:#a5d6a7">Monthly Investment Action Plan</h2></div>
+      <div class="data-table" style="margin-top:0">
+        <div class="data-row"><span class="data-key">Retirement SIP</span><span class="data-val" style="color:#4fc3f7" id="planRetireSIP">—</span></div>
+        <div class="data-row" id="planEducRow"><span class="data-key">Child Education SIP</span><span class="data-val" style="color:#f9a825" id="planEducSIP">—</span></div>
+        <div class="data-row" id="planMarriageRow"><span class="data-key">Child Marriage SIP</span><span class="data-val" style="color:#ce93d8" id="planMarriageSIP">—</span></div>
+        <div class="data-row"><span class="data-key">Emergency Fund Top-up</span><span class="data-val" style="color:#a5d6a7" id="planEmergency">—</span></div>
+        <div class="data-row"><span class="data-key">Gold SGB (quarterly equiv)</span><span class="data-val" style="color:#ffd54f" id="planGold">—</span></div>
+        <div class="data-row"><span class="data-key">Total Committed</span><span class="data-val" style="color:#ef5350" id="planTotal">—</span></div>
+        <div class="data-row" style="border-bottom:none"><span class="data-key">Remaining Savings</span><span class="data-val" style="color:#4fc3f7" id="planRemaining">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="disclaimer">
+    ⚠️ <b>Disclaimer:</b> This planner uses standard financial planning formulas and assumptions. Actual returns vary. Please consult a SEBI-registered financial advisor before making investment decisions. All figures are indicative.
+  </div>
+
+</div>
+
+<script>
+  // ── State ──
+  let planChild = true;
+
+  // ── Helpers ──
+  function formatCr(val) {
+    if (val >= 10000000) return `₹${(val / 10000000).toFixed(2)} Cr`;
+    if (val >= 100000)   return `₹${(val / 100000).toFixed(1)}L`;
+    return `₹${Math.round(val).toLocaleString('en-IN')}`;
+  }
+
+  function g(id) { return document.getElementById(id); }
+  function sv(id, txt) { const el = g(id); if (el) el.textContent = txt; }
+
+  function getSlider(id) { return parseFloat(g(id).value); }
+
+  // ── Tab switching ──
+  function showTab(name) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    g('tab-' + name).classList.add('active');
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      if (b.textContent.toLowerCase().replace(/\s/g,'') === name.replace(/\s/g,'') ||
+          b.getAttribute('onclick') === `showTab('${name}')`) b.classList.add('active');
+    });
+    recalc();
+  }
+
+  // ── Age guard ──
+  function onAgeChange(val) {
+    val = parseInt(val);
+    const retireSlider = g('retireAgeSlider');
+    if (parseInt(retireSlider.value) <= val) retireSlider.value = val + 5;
+    recalc();
+  }
+
+  // ── Toggle child ──
+  function toggleChild() {
+    planChild = !planChild;
+    g('childToggleBtn').style.background = planChild ? '#f9a825' : '#1a2535';
+    g('childToggleBtn').style.color = planChild ? '#000' : '#667788';
+    g('childToggleBtn').textContent = planChild ? 'YES' : 'NO';
+    g('childContent').style.display = planChild ? 'block' : 'none';
+    g('progEducWrap').style.display = planChild ? 'block' : 'none';
+    g('progMarriageWrap').style.display = planChild ? 'block' : 'none';
+    g('planEducRow').style.display = planChild ? 'flex' : 'none';
+    g('planMarriageRow').style.display = planChild ? 'flex' : 'none';
+    recalc();
+  }
+
+  // ── Main calculation ──
+  function recalc() {
+    const age         = getSlider('ageSlider');
+    const retireAge   = getSlider('retireAgeSlider');
+    const lifeExpect  = 85;
+    const income      = getSlider('incomeSlider');
+    const homeValue   = getSlider('homeValueSlider');
+    const homeLoan    = getSlider('loanSlider');
+    const savingsPct  = getSlider('savingsPctSlider');
+    const inflation   = getSlider('inflationSlider');
+    const returnRate  = getSlider('returnSlider');
+    const postReturn  = getSlider('postReturnSlider');
+    const currentCorpus = getSlider('existingSlider');
+    const monthlyExp  = getSlider('monthlyExpSlider');
+    const childYrs    = getSlider('childYrsSlider');
+    const educCost    = getSlider('educCostSlider');
+    const marriageCost = getSlider('marriageCostSlider');
+    const fireSavPct  = getSlider('fireSavPctSlider');
+
+    const yearsToRetire  = retireAge - age;
+    const retirementYrs  = lifeExpect - retireAge;
+    const monthlySavings = income * savingsPct / 100;
+
+    // Inflation-adjusted expenses
+    const futureMonthlyExp = monthlyExp * Math.pow(1 + inflation / 100, yearsToRetire);
+    const annualExpAtRetire = futureMonthlyExp * 12;
+
+    // Real return
+    const realReturn = (postReturn - inflation) / 100;
+    const retirementCorpus = realReturn > 0
+      ? annualExpAtRetire * ((1 - Math.pow(1 + realReturn, -retirementYrs)) / realReturn)
+      : annualExpAtRetire * retirementYrs;
+
+    // FV of existing corpus
+    const corpusFV = currentCorpus * Math.pow(1 + returnRate / 100, yearsToRetire);
+
+    // SIP for retirement
+    const monthlyRate = returnRate / 100 / 12;
+    const months = yearsToRetire * 12;
+    const fvFactor = months > 0
+      ? (Math.pow(1 + monthlyRate, months) - 1) / monthlyRate * (1 + monthlyRate)
+      : 1;
+    const retirementShortfall = Math.max(retirementCorpus - corpusFV, 0);
+    const sipForRetirement = fvFactor > 0 ? retirementShortfall / fvFactor : 0;
+
+    // Child goals
+    const educYrs    = childYrs + 18;
+    const marriageYrs = childYrs + 25;
+    const educCorpusNeeded    = educCost * Math.pow(1 + inflation / 100, educYrs);
+    const marriageCorpusNeeded = marriageCost * Math.pow(1 + inflation / 100, marriageYrs);
+
+    const educFV = (Math.pow(1 + monthlyRate, educYrs * 12) - 1) / monthlyRate * (1 + monthlyRate);
+    const marriageFV = (Math.pow(1 + monthlyRate, marriageYrs * 12) - 1) / monthlyRate * (1 + monthlyRate);
+    const sipForEduc    = planChild ? educCorpusNeeded / educFV : 0;
+    const sipForMarriage = planChild ? marriageCorpusNeeded / marriageFV : 0;
+
+    // FIRE
+    const fireCorpus  = annualExpAtRetire * 25;
+    const sipForFire  = Math.max((fireCorpus - corpusFV) / fvFactor, 0);
+
+    // Totals
+    const totalSIP   = sipForRetirement + (planChild ? sipForEduc + sipForMarriage : 0);
+    const totalSIPWithFire = sipForFire + (planChild ? sipForEduc + sipForMarriage : 0);
+    const surplus    = monthlySavings - totalSIP;
+
+    // Home
+    const homeEquity = homeValue - homeLoan;
+    const ltv = homeValue > 0 ? (homeLoan / homeValue) * 100 : 0;
+    const netWorth = homeEquity + currentCorpus;
+
+    // ─── UPDATE DOM ───
+
+    // Header pills
+    sv('pillAge', `${age} yrs`);
+    sv('pillIncome', `${formatCr(income)}/mo`);
+    sv('pillSavings', `${formatCr(monthlySavings)}/mo`);
+    sv('pillEquity', formatCr(homeEquity));
+    sv('headerSub', `Age ${age} · Owner-occupied home · All values update live`);
+
+    // Slider display values
+    sv('ageVal', `${age} years old`);
+    sv('incomeVal', formatCr(income));
+    sv('homeValDisp', formatCr(homeValue));
+    sv('loanVal', formatCr(homeLoan));
+    sv('savPctVal', `${savingsPct}% = ${formatCr(monthlySavings)}`);
+    sv('inflVal', `${inflation}%`);
+    sv('returnVal', `${returnRate}%`);
+    sv('postReturnVal', `${postReturn}%`);
+    sv('existingVal', formatCr(currentCorpus));
+    sv('retireAgeVal', `Age ${retireAge} (${yearsToRetire} yrs)`);
+    sv('monthlyExpVal', formatCr(monthlyExp));
+    sv('childYrsVal', `${childYrs} yr${childYrs > 1 ? 's' : ''} from now`);
+    sv('educCostVal', formatCr(educCost));
+    sv('marriageCostVal', formatCr(marriageCost));
+    sv('fireSavPctVal', `${fireSavPct}% = ${formatCr(income * fireSavPct / 100)}/mo`);
+
+    // Snapshot
+    sv('snapRetireAt', `Age ${retireAge}`);
+    sv('snapYearsAway', `${yearsToRetire} yrs away`);
+    sv('snapCorpus', formatCr(retirementCorpus));
+    sv('snapSIP', formatCr(totalSIP));
+
+    // Progress bars
+    function setProgress(barId, pctId, curId, tgtId, current, target, color) {
+      const pct = Math.min((current / target) * 100, 100);
+      const bar = g(barId);
+      if (bar) { bar.style.width = pct.toFixed(1) + '%'; bar.style.background = `linear-gradient(90deg,${color}88,${color})`; }
+      sv(pctId, pct.toFixed(0) + '% funded');
+      if (curId) sv(curId, 'Current: ' + formatCr(current));
+      if (tgtId) sv(tgtId, 'Target: ' + formatCr(target));
+    }
+    setProgress('progRetireBar','progRetirePct','progRetireCur','progRetireTgt', corpusFV, retirementCorpus, '#4fc3f7');
+    setProgress('progEducBar','progEducPct',null,'progEducTgt', 0, educCorpusNeeded, '#f9a825');
+    setProgress('progMarriageBar','progMarriagePct',null,'progMarriageTgt', 0, marriageCorpusNeeded, '#ce93d8');
+
+    // Home metrics
+    sv('mHomeEquity', formatCr(homeEquity));
+    sv('mLTV', ltv.toFixed(0) + '%');
+    sv('mLTVsub', ltv < 50 ? 'Healthy LTV' : 'High LTV');
+    const ltvEl = g('mLTV');
+    if (ltvEl) ltvEl.style.color = ltv < 50 ? '#a5d6a7' : '#ef5350';
+    sv('mNetWorth', formatCr(netWorth));
+
+    // Savings
+    sv('mAvail', formatCr(monthlySavings));
+    sv('mTotalSIP', formatCr(totalSIP));
+    sv('surplusVal', formatCr(Math.abs(surplus)));
+    sv('surplusLabel', surplus >= 0 ? 'Monthly Surplus' : 'Monthly Gap');
+    sv('surplusSub', surplus >= 0 ? 'Can invest more' : 'Increase savings');
+    const sBox = g('surplusBox');
+    if (sBox) {
+      sBox.style.borderColor = (surplus >= 0 ? '#4fc3f7' : '#ef5350') + '33';
+      g('surplusVal').style.color = surplus >= 0 ? '#4fc3f7' : '#ef5350';
+    }
+
+    // Retirement tab
+    sv('rCurAge', `${age} years`);
+    sv('rRetireAt', `Age ${retireAge} (${yearsToRetire} years from now)`);
+    sv('rDuration', `${retirementYrs} years (till age ${lifeExpect})`);
+    sv('rExpToday', formatCr(monthlyExp));
+    sv('rExpRetire', formatCr(futureMonthlyExp));
+    sv('rExpAnnual', formatCr(annualExpAtRetire));
+    sv('rCorpusReq', formatCr(retirementCorpus));
+    sv('rCorpusFV', formatCr(corpusFV));
+    sv('rShortfall', formatCr(retirementShortfall));
+    sv('rSIP', formatCr(sipForRetirement));
+    sv('retireInsight', `At ${formatCr(sipForRetirement)}/month SIP in diversified equity mutual funds over ${yearsToRetire} years at ${returnRate}% CAGR, you can build a retirement corpus of ${formatCr(retirementCorpus)}. Consider increasing SIP by 10% annually (step-up SIP) to accelerate corpus building and counter lifestyle inflation.`);
+
+    // Child tab
+    sv('cBornIn', `~${childYrs} year(s) from now`);
+    sv('cEducYrs', `${educYrs} years from now`);
+    sv('cEducCorpus', formatCr(educCorpusNeeded));
+    sv('cEducSIP', formatCr(sipForEduc));
+    sv('cMarriageYrs', `${marriageYrs} years from now`);
+    sv('cMarriageCorpus', formatCr(marriageCorpusNeeded));
+    sv('cMarriageSIP', formatCr(sipForMarriage));
+    sv('cTotalSIP', formatCr(sipForEduc + sipForMarriage));
+
+    // FIRE tab
+    sv('fAnnualExp', formatCr(annualExpAtRetire));
+    sv('fFireCorpus', formatCr(fireCorpus));
+    sv('fCorpusFV', formatCr(corpusFV));
+    sv('fShortfall', formatCr(Math.max(fireCorpus - corpusFV, 0)));
+    sv('fSIP', formatCr(sipForFire));
+    sv('fTotalSIP', formatCr(totalSIPWithFire));
+    sv('fmFireCorpus', formatCr(fireCorpus));
+    sv('fmSIP', formatCr(sipForFire));
+    sv('fmSavings', formatCr(income * fireSavPct / 100));
+    sv('fmSavingsSub', `at ${fireSavPct}% savings`);
+    sv('fireInsight', `FIRE at age ${retireAge} requires ${formatCr(fireCorpus)} corpus. The 25x rule assumes a 4% annual withdrawal — globally proven over 30-year periods. For India, consider 30x (3.3% withdrawal) to account for higher inflation. At ${savingsPct}% savings rate, you are well-positioned. Focus on index funds, avoid lifestyle creep, and use annual step-up SIPs.`);
+
+    // Allocation bars
+    const allocs = [
+      { label: 'Equity MF (Large Cap)', pct: 35, color: '#4fc3f7' },
+      { label: 'Equity MF (Mid/Small Cap)', pct: 20, color: '#81d4fa' },
+      { label: 'International Funds', pct: 10, color: '#29b6f6' },
+      { label: 'PPF / Debt Funds', pct: 20, color: '#f9a825' },
+      { label: 'Gold / SGBs', pct: 10, color: '#ffd54f' },
+      { label: 'Emergency Fund / Liquid', pct: 5, color: '#a5d6a7' },
+    ];
+    const allocContainer = g('allocBars');
+    if (allocContainer) {
+      allocContainer.innerHTML = allocs.map(a => `
+        <div class="alloc-wrap">
+          <div class="alloc-top">
+            <span style="font-size:12px;color:#8899aa">${a.label}</span>
+            <div style="display:flex;gap:12px">
+              <span style="font-size:11px;color:#445566">${formatCr(monthlySavings * a.pct / 100)}/mo</span>
+              <span style="font-size:12px;font-weight:700;color:${a.color}">${a.pct}%</span>
+            </div>
+          </div>
+          <div class="alloc-track">
+            <div class="alloc-fill" style="width:${a.pct}%;background:linear-gradient(90deg,${a.color}66,${a.color})"></div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Action plan
+    sv('planRetireSIP', formatCr(sipForRetirement));
+    sv('planEducSIP', formatCr(sipForEduc));
+    sv('planMarriageSIP', formatCr(sipForMarriage));
+    sv('planEmergency', formatCr(income * 0.03));
+    sv('planGold', formatCr(income * 0.04));
+    sv('planTotal', formatCr(totalSIP + income * 0.07));
+    sv('planRemaining', formatCr(monthlySavings - totalSIP - income * 0.07));
+  }
+
+  // Init
+  recalc();
+</script>
+</body>
+</html>
