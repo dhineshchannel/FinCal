@@ -207,8 +207,8 @@
 
       <div class="slider-wrap">
         <div class="slider-row"><span class="slider-label">Monthly Take-Home Salary</span><span class="slider-val" id="incomeVal" style="color:#ffd54f">₹1.0L</span></div>
-        <input type="range" id="incomeSlider" min="100000" max="1000000" step="25000" value="100000" style="accent-color:#ffd54f" oninput="recalc()">
-        <div class="slider-limits"><span>₹1.0L</span><span>₹10.0L</span></div>
+        <input type="range" id="incomeSlider" min="10000" max="1000000" step="10000" value="100000" style="accent-color:#ffd54f" oninput="recalc()">
+        <div class="slider-limits"><span>₹10K</span><span>₹10.0L</span></div>
       </div>
 
       <div class="slider-wrap">
@@ -336,45 +336,37 @@
   <!-- ═══ CHILD TAB ═══ -->
   <div class="tab-panel" id="tab-child">
     <div class="card" style="border-color:#f9a82533;border-left-color:#f9a825">
-      <div class="card-title"><span>🎓</span><h2 style="color:#f9a825">Child Education & Marriage</h2></div>
+      <div class="card-title"><span>🎓</span><h2 style="color:#f9a825">Child Goals Planner</h2></div>
 
-      <div class="child-toggle">
-        <span>Plan for Child?</span>
+      <div class="child-toggle" style="margin-bottom:20px">
+        <span>Plan for Children?</span>
         <button class="toggle-btn" id="childToggleBtn" onclick="toggleChild()" style="background:#f9a825;color:#000">YES</button>
       </div>
 
       <div id="childContent">
-        <div class="slider-wrap">
-          <div class="slider-row"><span class="slider-label">Years until child is born</span><span class="slider-val" id="childYrsVal" style="color:#f9a825">2 yrs from now</span></div>
-          <input type="range" id="childYrsSlider" min="1" max="5" step="1" value="2" style="accent-color:#f9a825" oninput="recalc()">
-          <div class="slider-limits"><span>1 yr</span><span>5 yrs</span></div>
-        </div>
-        <div class="slider-wrap">
-          <div class="slider-row"><span class="slider-label">Education Cost (Today's Value)</span><span class="slider-val" id="educCostVal" style="color:#f9a825">₹50.0L</span></div>
-          <input type="range" id="educCostSlider" min="1000000" max="20000000" step="500000" value="5000000" style="accent-color:#f9a825" oninput="recalc()">
-          <div class="slider-limits"><span>₹10.0L</span><span>₹2.00Cr</span></div>
-        </div>
-        <div class="slider-wrap">
-          <div class="slider-row"><span class="slider-label">Marriage Cost (Today's Value)</span><span class="slider-val" id="marriageCostVal" style="color:#ce93d8">₹30.0L</span></div>
-          <input type="range" id="marriageCostSlider" min="500000" max="10000000" step="500000" value="3000000" style="accent-color:#ce93d8" oninput="recalc()">
-          <div class="slider-limits"><span>₹5.0L</span><span>₹1.00Cr</span></div>
+        <!-- Number of children selector -->
+        <div style="margin-bottom:20px">
+          <div style="font-size:11px;color:#8899aa;margin-bottom:10px;letter-spacing:0.04em">HOW MANY CHILDREN?</div>
+          <div style="display:flex;gap:8px">
+            <button onclick="setNumChildren(1)" id="nc1" class="toggle-btn" style="background:#f9a825;color:#000;flex:1">1</button>
+            <button onclick="setNumChildren(2)" id="nc2" class="toggle-btn" style="background:#111e2b;color:#556677;flex:1">2</button>
+            <button onclick="setNumChildren(3)" id="nc3" class="toggle-btn" style="background:#111e2b;color:#556677;flex:1">3</button>
+            <button onclick="setNumChildren(4)" id="nc4" class="toggle-btn" style="background:#111e2b;color:#556677;flex:1">4</button>
+          </div>
         </div>
 
-        <div class="data-table">
-          <div class="data-label">Child Goals Calculator</div>
-          <div class="data-row"><span class="data-key">Child born in</span><span class="data-val" id="cBornIn">~2 year(s) from now</span></div>
-          <div class="data-row"><span class="data-key">Education at age 18</span><span class="data-val" id="cEducYrs">20 years from now</span></div>
-          <div class="data-row"><span class="data-key">Education Corpus Needed</span><span class="data-val" id="cEducCorpus">—</span></div>
-          <div class="data-row"><span class="data-key">Monthly SIP for Education</span><span class="data-val" id="cEducSIP" style="color:#f9a825">—</span></div>
-          <div class="data-row"><span class="data-key">Marriage at age 25</span><span class="data-val" id="cMarriageYrs">27 years from now</span></div>
-          <div class="data-row"><span class="data-key">Marriage Corpus Needed</span><span class="data-val" id="cMarriageCorpus">—</span></div>
-          <div class="data-row"><span class="data-key">Monthly SIP for Marriage</span><span class="data-val" id="cMarriageSIP" style="color:#ce93d8">—</span></div>
-          <div class="data-row"><span class="data-key">Total SIP for Child Goals</span><span class="data-val" id="cTotalSIP" style="color:#f9a825">—</span></div>
+        <!-- Per-child cards rendered by JS -->
+        <div id="childCards"></div>
+
+        <!-- Grand Total Summary -->
+        <div id="childSummary" style="background:#07111c;border:1px solid #f9a82544;border-radius:12px;padding:16px;margin-top:4px">
+          <div style="font-size:11px;color:#f9a825;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px">📊 Grand Total — All Children</div>
+          <div id="childSummaryRows"></div>
         </div>
 
-        <div class="insight" style="background:#07111c;border:1px solid #f9a82522">
+        <div class="insight" style="background:#07111c;border:1px solid #f9a82522;margin-top:16px">
           <div class="insight-title" style="color:#f9a825">💡 CFP INSIGHT</div>
-          <p>Start a dedicated child SIP as soon as the child is born. Consider <b>Sukanya Samriddhi Yojana</b> (if girl child) for the marriage goal — it offers ~8% tax-free returns. For education, use aggressive equity allocation now, shifting to debt 3 years before the goal.</p>
+          <p>Start dedicated SIPs at birth for each goal. Use <b>Sukanya Samriddhi Yojana</b> (girl child) for marriage — ~8% tax-free. For school fees, a <b>recurring deposit + debt fund</b> ladder works well. For university, go aggressive equity now, shift to debt 3 years before. Consider <b>education loans</b> for premier institutes to preserve your corpus.</p>
         </div>
       </div>
     </div>
@@ -479,6 +471,88 @@
 <script>
   // ── State ──
   let planChild = true;
+  let numChildren = 1;
+
+  function setNumChildren(n) {
+    numChildren = n;
+    [1,2,3,4].forEach(i => {
+      const btn = g(`nc${i}`);
+      if (btn) { btn.style.background = i === n ? '#f9a825' : '#111e2b'; btn.style.color = i === n ? '#000' : '#556677'; }
+    });
+    renderChildCards();
+    recalc();
+  }
+
+  function renderChildCards() {
+    const container = g('childCards');
+    if (!container) return;
+    const labels = ['Child 1', 'Child 2', 'Child 3', 'Child 4'];
+    const colors  = ['#f9a825', '#4fc3f7', '#a5d6a7', '#ce93d8'];
+    let html = '';
+    for (let i = 1; i <= numChildren; i++) {
+      const c = colors[i-1];
+      html += `
+      <div style="background:#07111c;border:1px solid ${c}33;border-left:3px solid ${c};border-radius:12px;padding:16px 20px;margin-bottom:16px">
+        <div style="font-size:13px;font-weight:700;color:${c};letter-spacing:0.06em;text-transform:uppercase;margin-bottom:14px">👶 ${labels[i-1]}</div>
+
+        <div class="slider-wrap">
+          <div class="slider-row"><span class="slider-label">Current Age (0 = not yet born)</span><span class="slider-val" id="c${i}_lbl_age" style="color:${c}">0 — not yet born</span></div>
+          <input type="range" id="c${i}_age" min="0" max="15" step="1" value="0" style="accent-color:${c}" oninput="recalc()">
+          <div class="slider-limits"><span>0 (not born)</span><span>15 yrs</span></div>
+        </div>
+
+        <div id="c${i}_birthWrap" class="slider-wrap">
+          <div class="slider-row"><span class="slider-label">Years until born</span><span class="slider-val" id="c${i}_lbl_yrs" style="color:${c}">2 yrs from now</span></div>
+          <input type="range" id="c${i}_yrs" min="1" max="5" step="1" value="2" style="accent-color:${c}" oninput="recalc()">
+          <div class="slider-limits"><span>1 yr</span><span>5 yrs</span></div>
+        </div>
+
+        <div style="margin:12px 0 8px;font-size:10px;color:#ffd54f;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #1a2535;padding-bottom:5px">📚 School</div>
+        <div class="slider-wrap">
+          <div class="slider-row"><span class="slider-label">School Start Age</span><span class="slider-val" id="c${i}_lbl_schoolStart" style="color:#ffd54f">Age 3</span></div>
+          <input type="range" id="c${i}_schoolStart" min="3" max="6" step="1" value="3" style="accent-color:#ffd54f" oninput="recalc()">
+          <div class="slider-limits"><span>Age 3</span><span>Age 6</span></div>
+        </div>
+        <div class="slider-wrap">
+          <div class="slider-row"><span class="slider-label">Annual School Fees (Today)</span><span class="slider-val" id="c${i}_lbl_schoolFee" style="color:#ffd54f">₹1.0L/yr</span></div>
+          <input type="range" id="c${i}_schoolFee" min="30000" max="2000000" step="10000" value="100000" style="accent-color:#ffd54f" oninput="recalc()">
+          <div class="slider-limits"><span>₹30K</span><span>₹20.0L</span></div>
+        </div>
+        <div class="slider-wrap">
+          <div class="slider-row"><span class="slider-label">School Duration</span><span class="slider-val" id="c${i}_lbl_schoolDur" style="color:#ffd54f">12 yrs</span></div>
+          <input type="range" id="c${i}_schoolDur" min="10" max="14" step="1" value="12" style="accent-color:#ffd54f" oninput="recalc()">
+          <div class="slider-limits"><span>10 yrs</span><span>14 yrs</span></div>
+        </div>
+
+        <div style="margin:12px 0 8px;font-size:10px;color:#29b6f6;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #1a2535;padding-bottom:5px">🎓 University</div>
+        <div class="slider-wrap">
+          <div class="slider-row"><span class="slider-label">Total University Cost (Today)</span><span class="slider-val" id="c${i}_lbl_univCost" style="color:#29b6f6">₹20.0L</span></div>
+          <input type="range" id="c${i}_univCost" min="500000" max="30000000" step="500000" value="2000000" style="accent-color:#29b6f6" oninput="recalc()">
+          <div class="slider-limits"><span>₹5.0L</span><span>₹3.00Cr</span></div>
+        </div>
+
+        <div style="margin:12px 0 8px;font-size:10px;color:#ce93d8;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #1a2535;padding-bottom:5px">💍 Marriage</div>
+        <div class="slider-wrap">
+          <div class="slider-row"><span class="slider-label">Marriage Cost (Today)</span><span class="slider-val" id="c${i}_lbl_marriage" style="color:#ce93d8">₹30.0L</span></div>
+          <input type="range" id="c${i}_marriage" min="500000" max="10000000" step="500000" value="3000000" style="accent-color:#ce93d8" oninput="recalc()">
+          <div class="slider-limits"><span>₹5.0L</span><span>₹1.00Cr</span></div>
+        </div>
+
+        <div style="background:#060e18;border-radius:8px;padding:12px;margin-top:8px;font-size:12px">
+          <div style="color:#445566;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px">Results</div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #0d1e2e"><span style="color:#667788">Current Status</span><span style="color:#c8dde8;font-weight:700" id="c${i}_res_age">—</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #0d1e2e"><span style="color:#667788">School</span><span style="color:#ffd54f;font-weight:600;text-align:right;max-width:55%" id="c${i}_res_school">—</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #0d1e2e"><span style="color:#667788">School SIP</span><span style="color:#ffd54f;font-weight:700" id="c${i}_res_schoolSIP">—</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #0d1e2e"><span style="color:#667788">University</span><span style="color:#29b6f6;font-weight:600;text-align:right;max-width:55%" id="c${i}_res_univ">—</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #0d1e2e"><span style="color:#667788">University SIP</span><span style="color:#29b6f6;font-weight:700" id="c${i}_res_univSIP">—</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #0d1e2e"><span style="color:#667788">Marriage</span><span style="color:#ce93d8;font-weight:600;text-align:right;max-width:55%" id="c${i}_res_marriage">—</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #0d1e2e"><span style="color:#667788">Marriage SIP</span><span style="color:#ce93d8;font-weight:700" id="c${i}_res_marriageSIP">—</span></div>
+          <div style="display:flex;justify-content:space-between;padding:7px 0;margin-top:2px"><span style="color:#c8dde8;font-weight:700">Total SIP</span><span style="color:${c};font-weight:800;font-size:14px" id="c${i}_res_total">—</span></div>
+        </div>
+      </div>`;
+    }
+    container.innerHTML = html;
+  }
 
   // ── Helpers ──
   function formatCr(val) {
@@ -540,9 +614,6 @@
     const postReturn  = getSlider('postReturnSlider');
     const currentCorpus = getSlider('existingSlider');
     const monthlyExp  = getSlider('monthlyExpSlider');
-    const childYrs    = getSlider('childYrsSlider');
-    const educCost    = getSlider('educCostSlider');
-    const marriageCost = getSlider('marriageCostSlider');
     const fireSavPct  = getSlider('fireSavPctSlider');
 
     const yearsToRetire  = retireAge - age;
@@ -571,24 +642,102 @@
     const retirementShortfall = Math.max(retirementCorpus - corpusFV, 0);
     const sipForRetirement = fvFactor > 0 ? retirementShortfall / fvFactor : 0;
 
-    // Child goals
-    const educYrs    = childYrs + 18;
-    const marriageYrs = childYrs + 25;
-    const educCorpusNeeded    = educCost * Math.pow(1 + inflation / 100, educYrs);
-    const marriageCorpusNeeded = marriageCost * Math.pow(1 + inflation / 100, marriageYrs);
+    // ── Per-child calculations (reads from dynamic slider IDs) ──
+    let totalChildSIP = 0;
+    let totalSchoolCorpus = 0, totalUnivCorpus = 0, totalMarriageCorpus = 0;
+    let totalSchoolSIP = 0, totalUnivSIP = 0, totalMarriageSIP = 0;
+    const educCorpusNeeded = 0, marriageCorpusNeeded = 0; // for progress bars (set below)
 
-    const educFV = (Math.pow(1 + monthlyRate, educYrs * 12) - 1) / monthlyRate * (1 + monthlyRate);
-    const marriageFV = (Math.pow(1 + monthlyRate, marriageYrs * 12) - 1) / monthlyRate * (1 + monthlyRate);
-    const sipForEduc    = planChild ? educCorpusNeeded / educFV : 0;
-    const sipForMarriage = planChild ? marriageCorpusNeeded / marriageFV : 0;
+    function calcChildSIP(corpus, yrsAway) {
+      const n = Math.max(yrsAway * 12, 1);
+      const fv = (Math.pow(1 + monthlyRate, n) - 1) / monthlyRate * (1 + monthlyRate);
+      return fv > 0 ? corpus / fv : 0;
+    }
+
+    for (let i = 1; i <= numChildren; i++) {
+      const childAge    = parseFloat((g(`c${i}_age`) || {value:0}).value || 0);
+      const childYrs    = parseFloat((g(`c${i}_yrs`) || {value:2}).value || 2);
+      const schoolStart = parseFloat((g(`c${i}_schoolStart`) || {value:3}).value || 3);
+      const schoolFee   = parseFloat((g(`c${i}_schoolFee`) || {value:100000}).value || 100000);
+      const schoolDur   = parseFloat((g(`c${i}_schoolDur`) || {value:12}).value || 12);
+      const univCost    = parseFloat((g(`c${i}_univCost`) || {value:2000000}).value || 2000000);
+      const marriageCost= parseFloat((g(`c${i}_marriage`) || {value:3000000}).value || 3000000);
+
+      const yearsUntilBorn = childAge === 0 ? childYrs : 0;
+      const curAge = childAge;
+
+      const yrsToSchool   = Math.max((schoolStart - curAge) + yearsUntilBorn, 0.5);
+      const yrsToUniv     = Math.max((18 - curAge) + yearsUntilBorn, 1);
+      const yrsToMarriage = Math.max((25 - curAge) + yearsUntilBorn, 1);
+
+      const annualSchoolAtStart = schoolFee * Math.pow(1 + inflation / 100, yrsToSchool);
+      const schoolRealRet = Math.max((returnRate - inflation) / 100, 0.01);
+      const schoolCorpus  = annualSchoolAtStart * ((1 - Math.pow(1 + schoolRealRet, -schoolDur)) / schoolRealRet);
+      const univCorpus    = univCost * Math.pow(1 + inflation / 100, yrsToUniv);
+      const marriageCorpus= marriageCost * Math.pow(1 + inflation / 100, yrsToMarriage);
+
+      const schoolSIP  = calcChildSIP(schoolCorpus, yrsToSchool);
+      const univSIP    = calcChildSIP(univCorpus, yrsToUniv);
+      const marriageSIP= calcChildSIP(marriageCorpus, yrsToMarriage);
+      const childTotal = schoolSIP + univSIP + marriageSIP;
+
+      totalSchoolCorpus  += schoolCorpus;
+      totalUnivCorpus    += univCorpus;
+      totalMarriageCorpus+= marriageCorpus;
+      totalSchoolSIP  += schoolSIP;
+      totalUnivSIP    += univSIP;
+      totalMarriageSIP+= marriageSIP;
+      totalChildSIP   += childTotal;
+
+      // Update per-child result display
+      const upd = (id, val) => { const el = g(`c${i}_${id}`); if (el) el.textContent = val; };
+      upd('res_age',      childAge === 0 ? `Not born yet (in ${childYrs} yr${childYrs > 1?'s':''})` : `${childAge} yrs old`);
+      upd('res_school',   `${yrsToSchool.toFixed(0)} yrs from now — Corpus: ${formatCr(schoolCorpus)}`);
+      upd('res_schoolSIP',formatCr(schoolSIP) + '/mo');
+      upd('res_univ',     `${yrsToUniv.toFixed(0)} yrs from now — Corpus: ${formatCr(univCorpus)}`);
+      upd('res_univSIP',  formatCr(univSIP) + '/mo');
+      upd('res_marriage', `${yrsToMarriage.toFixed(0)} yrs from now — Corpus: ${formatCr(marriageCorpus)}`);
+      upd('res_marriageSIP', formatCr(marriageSIP) + '/mo');
+      upd('res_total',    formatCr(childTotal) + '/mo');
+
+      // Update slider labels
+      const sl = (id, val) => { const el = g(`c${i}_lbl_${id}`); if (el) el.textContent = val; };
+      sl('age',        childAge === 0 ? '0 — not yet born' : `${childAge} yrs old`);
+      sl('yrs',        `${childYrs} yr${childYrs>1?'s':''} from now`);
+      sl('schoolStart',`Age ${schoolStart}`);
+      sl('schoolFee',  `${formatCr(schoolFee)}/yr`);
+      sl('schoolDur',  `${schoolDur} yrs`);
+      sl('univCost',   formatCr(univCost));
+      sl('marriage',   formatCr(marriageCost));
+
+      // Show/hide "years until born"
+      const bw = g(`c${i}_birthWrap`);
+      if (bw) bw.style.display = childAge === 0 ? 'block' : 'none';
+    }
+
+    // Grand total summary
+    const summaryEl = g('childSummaryRows');
+    if (summaryEl) {
+      summaryEl.innerHTML = `
+        <div class="data-row"><span class="data-key" style="color:#ffd54f">📚 Total School SIP</span><span class="data-val" style="color:#ffd54f">${formatCr(totalSchoolSIP)}/mo</span></div>
+        <div class="data-row"><span class="data-key" style="color:#29b6f6">🎓 Total University SIP</span><span class="data-val" style="color:#29b6f6">${formatCr(totalUnivSIP)}/mo</span></div>
+        <div class="data-row"><span class="data-key" style="color:#ce93d8">💍 Total Marriage SIP</span><span class="data-val" style="color:#ce93d8">${formatCr(totalMarriageSIP)}/mo</span></div>
+        <div class="data-row" style="border-top:1px solid #1a2535;padding-top:10px;margin-top:4px">
+          <span class="data-key" style="color:#e8f4ff;font-weight:700">🧮 Grand Total SIP</span>
+          <span class="data-val" style="color:#f9a825;font-size:15px;font-weight:800">${formatCr(totalChildSIP)}/mo</span>
+        </div>
+      `;
+    }
+
+    sv('cTotalSIP', formatCr(totalChildSIP));
 
     // FIRE
     const fireCorpus  = annualExpAtRetire * 25;
     const sipForFire  = Math.max((fireCorpus - corpusFV) / fvFactor, 0);
 
     // Totals
-    const totalSIP   = sipForRetirement + (planChild ? sipForEduc + sipForMarriage : 0);
-    const totalSIPWithFire = sipForFire + (planChild ? sipForEduc + sipForMarriage : 0);
+    const totalSIP   = sipForRetirement + (planChild ? totalChildSIP : 0);
+    const totalSIPWithFire = sipForFire + (planChild ? totalChildSIP : 0);
     const surplus    = monthlySavings - totalSIP;
 
     // Home
@@ -617,9 +766,6 @@
     sv('existingVal', formatCr(currentCorpus));
     sv('retireAgeVal', `Age ${retireAge} (${yearsToRetire} yrs)`);
     sv('monthlyExpVal', formatCr(monthlyExp));
-    sv('childYrsVal', `${childYrs} yr${childYrs > 1 ? 's' : ''} from now`);
-    sv('educCostVal', formatCr(educCost));
-    sv('marriageCostVal', formatCr(marriageCost));
     sv('fireSavPctVal', `${fireSavPct}% = ${formatCr(income * fireSavPct / 100)}/mo`);
 
     // Snapshot
@@ -674,15 +820,7 @@
     sv('rSIP', formatCr(sipForRetirement));
     sv('retireInsight', `At ${formatCr(sipForRetirement)}/month SIP in diversified equity mutual funds over ${yearsToRetire} years at ${returnRate}% CAGR, you can build a retirement corpus of ${formatCr(retirementCorpus)}. Consider increasing SIP by 10% annually (step-up SIP) to accelerate corpus building and counter lifestyle inflation.`);
 
-    // Child tab
-    sv('cBornIn', `~${childYrs} year(s) from now`);
-    sv('cEducYrs', `${educYrs} years from now`);
-    sv('cEducCorpus', formatCr(educCorpusNeeded));
-    sv('cEducSIP', formatCr(sipForEduc));
-    sv('cMarriageYrs', `${marriageYrs} years from now`);
-    sv('cMarriageCorpus', formatCr(marriageCorpusNeeded));
-    sv('cMarriageSIP', formatCr(sipForMarriage));
-    sv('cTotalSIP', formatCr(sipForEduc + sipForMarriage));
+    // (child tab DOM updated inside per-child loop above)
 
     // FIRE tab
     sv('fAnnualExp', formatCr(annualExpAtRetire));
@@ -726,7 +864,7 @@
 
     // Action plan
     sv('planRetireSIP', formatCr(sipForRetirement));
-    sv('planEducSIP', formatCr(sipForEduc));
+    sv('planEducSIP', formatCr(sipForSchool + sipForEduc));
     sv('planMarriageSIP', formatCr(sipForMarriage));
     sv('planEmergency', formatCr(income * 0.03));
     sv('planGold', formatCr(income * 0.04));
@@ -735,6 +873,7 @@
   }
 
   // Init
+  renderChildCards();
   recalc();
 </script>
 </body>
