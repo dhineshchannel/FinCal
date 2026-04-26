@@ -145,7 +145,7 @@ input[type=range] { width: 100%; height: 4px; cursor: pointer; border: none; out
     <div style="font-size:12px;font-weight:700;color:#ffd54f;margin-bottom:12px">👤 INCOME & PROFILE</div>
     <div class="sb">
       <div class="sr"><span>Current Age</span><b id="vAge" style="color:#ce93d8">25 yrs</b></div>
-      <input type="range" id="sAge" min="22" max="55" step="1" value="25" style="accent-color:#ce93d8" oninput="onAgeChange(this.value)">
+      <input type="range" id="sAge" min="22" max="55" step="1" value="25" style="accent-color:#ce93d8" oninput="onAgeChange(+this.value)">
       <div class="slim"><span>22</span><span>55</span></div>
     </div>
     <div class="sb">
@@ -326,4 +326,547 @@ input[type=range] { width: 100%; height: 4px; cursor: pointer; border: none; out
     <div style="font-size:12px;font-weight:700;color:#a5d6a7;margin-bottom:12px">🛡️ EMERGENCY FUND PLANNER</div>
     <div class="mrow">
       <div class="mbox"><div class="lbl">Target Fund</div><div class="val" style="color:#a5d6a7" id="efTarget">—</div><div class="sub" id="efTargetSub">6 months expenses</div></div>
-      <div class="mbox"><div class="lbl">Already Saved</div><div class="val" style="
+      <div class="mbox"><div class="lbl">Already Saved</div><div class="val" style="color:#4fc3f7" id="efSavM">₹0</div><div class="sub">Current balance</div></div>
+      <div class="mbox"><div class="lbl">Monthly SIP</div><div class="val" style="color:#f9a825" id="efSIPM">—</div><div class="sub">To build fund</div></div>
+    </div>
+    <div class="sb">
+      <div class="sr"><span>Monthly Expenses</span><b id="vEfExp" style="color:#a5d6a7">₹70K</b></div>
+      <input type="range" id="sEfExp" min="10000" max="300000" step="5000" value="70000" style="accent-color:#a5d6a7" oninput="efCalc()">
+      <div class="slim"><span>₹10K</span><span>₹3L</span></div>
+    </div>
+    <div class="sb">
+      <div class="sr"><span>Coverage Target (months)</span><b id="vEfMo" style="color:#a5d6a7">6 months</b></div>
+      <input type="range" id="sEfMo" min="3" max="12" step="1" value="6" style="accent-color:#a5d6a7" oninput="efCalc()">
+      <div class="slim"><span>3</span><span>12</span></div>
+    </div>
+    <div class="sb">
+      <div class="sr"><span>Amount Already Saved</span><b id="vEfSaved" style="color:#4fc3f7">₹0</b></div>
+      <input type="range" id="sEfSaved" min="0" max="2000000" step="10000" value="0" style="accent-color:#4fc3f7" oninput="efCalc()">
+      <div class="slim"><span>₹0</span><span>₹20L</span></div>
+    </div>
+    <div class="sb">
+      <div class="sr"><span>Build Fund In (months)</span><b id="vEfTime" style="color:#f9a825">12 months</b></div>
+      <input type="range" id="sEfTime" min="3" max="36" step="1" value="12" style="accent-color:#f9a825" oninput="efCalc()">
+      <div class="slim"><span>3</span><span>36</span></div>
+    </div>
+    <div class="pbar-wrap">
+      <div class="pbar-top"><span style="color:#8899aa">Fund Progress</span><span style="color:#a5d6a7" id="efPct">0% built</span></div>
+      <div class="pbar-track"><div class="pbar-fill" id="efBar" style="width:0%;background:linear-gradient(90deg,#a5d6a788,#a5d6a7)"></div></div>
+      <div class="pbar-bot"><span id="efCurL">Saved: ₹0</span><span id="efTgtL">Target: —</span></div>
+    </div>
+    <div class="tbl">
+      <div class="tbl-lbl">Breakdown</div>
+      <div class="trow"><span class="k">Monthly Expenses</span><span class="v" id="efRExp">—</span></div>
+      <div class="trow"><span class="k">Coverage</span><span class="v" id="efRMo">—</span></div>
+      <div class="trow"><span class="k">Total Fund Required</span><span class="v" style="color:#a5d6a7" id="efRTarget">—</span></div>
+      <div class="trow"><span class="k">Already Saved</span><span class="v" style="color:#4fc3f7" id="efRSaved">—</span></div>
+      <div class="trow"><span class="k">Balance to Build</span><span class="v" id="efRGap">—</span></div>
+      <div class="trow"><span class="k">Build In</span><span class="v" id="efRTime">—</span></div>
+      <div class="trow"><span class="k" style="color:#e8f4ff;font-weight:700">Monthly SIP Needed</span><span class="v" style="color:#f9a825;font-size:13px" id="efRSIP">—</span></div>
+    </div>
+    <div class="ins">
+      <div class="t" style="color:#a5d6a7">💡 Where to Park Your Emergency Fund</div>
+      <p>
+        • <b>Liquid Mutual Funds</b> — instant redemption, ~6–7% returns<br>
+        • <b>High-yield Savings A/C</b> — 3.5–7%, zero lock-in (Kotak, DBS, IDFC First)<br>
+        • <b>Ultra Short / Overnight Funds</b> — very low risk, T+1 redemption<br>
+        • <b>Sweep-in FD</b> — auto-breaks on withdrawal, earns FD rate<br><br>
+        ❌ Never park emergency funds in equity, crypto, or lock-in products.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ACTION PLAN ===== -->
+<div class="panel" id="tab-plan">
+  <div class="card" style="border-left-color:#a5d6a7">
+    <div style="font-size:12px;font-weight:700;color:#a5d6a7;margin-bottom:12px">📋 MONTHLY INVESTMENT ACTION PLAN</div>
+    <div class="tbl" style="margin-top:0">
+      <div class="trow"><span class="k">Retirement SIP</span><span class="v" style="color:#4fc3f7" id="apRet">—</span></div>
+      <div class="trow" id="apChildRow"><span class="k">All Child Goals SIP</span><span class="v" style="color:#f9a825" id="apChild">—</span></div>
+      <div class="trow"><span class="k">Emergency Fund SIP</span><span class="v" style="color:#a5d6a7" id="apEF">—</span></div>
+      <div class="trow"><span class="k" style="color:#e8f4ff;font-weight:700">Total Committed</span><span class="v" style="color:#ef5350;font-size:13px" id="apTotal">—</span></div>
+      <div class="trow" style="border-bottom:none"><span class="k">Remaining / Flexible</span><span class="v" id="apRemain">—</span></div>
+    </div>
+    <div style="margin-top:14px">
+      <div style="font-size:9px;color:#445566;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Where Every Rupee Goes</div>
+      <div class="stack-bar" id="planStack"></div>
+      <div class="stack-legend" id="planLegend"></div>
+    </div>
+  </div>
+</div>
+
+<div class="disc">⚠️ <b>Disclaimer:</b> This planner uses standard financial formulas. Actual returns vary. Consult a SEBI-registered financial advisor before investing.</div>
+</div><!-- /wrap -->
+
+<script>
+// ─── helpers ───────────────────────────────────────
+function f(v) {
+  v = Number(v) || 0;
+  if (v >= 10000000) return '\u20b9' + (v / 10000000).toFixed(2) + ' Cr';
+  if (v >= 100000)   return '\u20b9' + (v / 100000).toFixed(1) + 'L';
+  if (v >= 1000)     return '\u20b9' + (v / 1000).toFixed(1) + 'K';
+  return '\u20b9' + Math.round(v);
+}
+function el(id)     { return document.getElementById(id); }
+function set(id, v) { var e = el(id); if (e) e.textContent = v; }
+function val(id)    { var e = el(id); return e ? (parseFloat(e.value) || 0) : 0; }
+
+// ─── tab switching ─────────────────────────────────
+function showTab(name) {
+  var panels = document.querySelectorAll('.panel');
+  var tabs   = document.querySelectorAll('.tab');
+  for (var i = 0; i < panels.length; i++) panels[i].classList.remove('on');
+  for (var i = 0; i < tabs.length; i++)   tabs[i].classList.remove('on');
+  var p = el('tab-' + name);
+  if (p) p.classList.add('on');
+  for (var i = 0; i < tabs.length; i++) {
+    if (tabs[i].getAttribute('onclick') === "showTab('" + name + "')") tabs[i].classList.add('on');
+  }
+}
+
+// ─── stacked bar ───────────────────────────────────
+function stackBar(id, legendId, segs) {
+  var bar = el(id);
+  var leg = el(legendId);
+  if (!bar) return;
+  var total = 0;
+  for (var i = 0; i < segs.length; i++) total += (segs[i].v || 0);
+  if (!total) { bar.innerHTML = '<div style="width:100%;background:#1a2535;height:18px;border-radius:5px"></div>'; if (leg) leg.innerHTML = ''; return; }
+  var html = '';
+  for (var i = 0; i < segs.length; i++) {
+    var pct = ((segs[i].v || 0) / total * 100).toFixed(1);
+    html += '<div class="stack-seg" style="width:' + pct + '%;background:' + segs[i].c + '">';
+    if (parseFloat(pct) > 8) html += Math.round(parseFloat(pct)) + '%';
+    html += '</div>';
+  }
+  bar.innerHTML = html;
+  if (leg) {
+    var lhtml = '';
+    for (var i = 0; i < segs.length; i++) {
+      lhtml += '<div class="item"><div class="dot" style="background:' + segs[i].c + '"></div><span>' + segs[i].l + ': <b style="color:' + segs[i].c + '">' + f(segs[i].v || 0) + '</b></span></div>';
+    }
+    leg.innerHTML = lhtml;
+  }
+}
+
+// ─── mini bar chart (div-based) ────────────────────
+function miniBarChart(containerId, segs) {
+  var con = el(containerId);
+  if (!con) return;
+  var maxV = 0;
+  for (var i = 0; i < segs.length; i++) if ((segs[i].v || 0) > maxV) maxV = segs[i].v || 0;
+  if (!maxV) maxV = 1;
+  var html = '';
+  for (var i = 0; i < segs.length; i++) {
+    var h = Math.max(((segs[i].v || 0) / maxV * 100), 2);
+    html += '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">';
+    html += '<div style="width:100%;background:' + segs[i].c + ';height:' + h + '%;border-radius:3px 3px 0 0;min-height:2px"></div>';
+    html += '<div style="font-size:8px;color:' + segs[i].c + ';text-align:center">' + segs[i].l + '</div>';
+    html += '</div>';
+  }
+  con.innerHTML = html;
+}
+
+// ─── corpus growth bars (div-based) ───────────────
+function growthBars(containerId, points, targetVal, color) {
+  var con = el(containerId);
+  if (!con || !points || !points.length) return;
+  var maxV = targetVal || 1;
+  for (var i = 0; i < points.length; i++) if (points[i] > maxV) maxV = points[i];
+  var html = '';
+  // show every 5th point for clean look
+  var step = Math.max(1, Math.floor(points.length / 12));
+  for (var i = 0; i < points.length; i += step) {
+    var h = Math.max((points[i] / maxV * 100), 2);
+    var isTarget = targetVal && points[i] >= targetVal * 0.98;
+    html += '<div style="flex:1;background:' + (isTarget ? '#a5d6a7' : color) + ';height:' + h + '%;border-radius:2px 2px 0 0;min-height:2px"></div>';
+  }
+  con.innerHTML = html;
+}
+
+// ─── emergency fund calc ──────────────────────────
+function efCalc() {
+  var exp    = val('sEfExp');
+  var months = val('sEfMo');
+  var saved  = val('sEfSaved');
+  var time   = val('sEfTime');
+  var target = exp * months;
+  var gap    = Math.max(target - saved, 0);
+  var sip    = time > 0 ? gap / time : gap;
+  var pct    = target > 0 ? Math.min((saved / target) * 100, 100) : 0;
+
+  set('efTarget',    f(target));
+  set('efTargetSub', months + ' months of expenses');
+  set('efSavM',      f(saved));
+  set('efSIPM',      f(sip) + '/mo');
+  set('vEfExp',      f(exp));
+  set('vEfMo',       months + ' months');
+  set('vEfSaved',    f(saved));
+  set('vEfTime',     time + ' months');
+  set('efPct',       pct.toFixed(0) + '% built');
+  set('efCurL',      'Saved: ' + f(saved));
+  set('efTgtL',      'Target: ' + f(target));
+  set('efRExp',      f(exp) + '/mo');
+  set('efRMo',       months + ' months');
+  set('efRTarget',   f(target));
+  set('efRSaved',    f(saved));
+  set('efRGap',      f(gap));
+  set('efRTime',     time + ' months');
+  set('efRSIP',      f(sip) + '/mo');
+
+  var bar = el('efBar');
+  if (bar) bar.style.width = pct.toFixed(1) + '%';
+  return sip;
+}
+
+// ─── child state ──────────────────────────────────
+var planChild = true;
+var numKids   = 1;
+
+function toggleChild() {
+  planChild = !planChild;
+  var btn = el('childBtn');
+  btn.style.background = planChild ? '#f9a825' : '#1a2535';
+  btn.style.color       = planChild ? '#000'    : '#667788';
+  btn.textContent       = planChild ? 'YES'     : 'NO';
+  el('childContent').style.display = planChild ? 'block' : 'none';
+  var cpw = el('childPbarWrap');
+  if (cpw) cpw.style.display = planChild ? 'block' : 'none';
+  var acr = el('apChildRow');
+  if (acr) acr.style.display = planChild ? 'flex' : 'none';
+  calc();
+}
+
+function setKids(n) {
+  numKids = n;
+  for (var i = 1; i <= 4; i++) {
+    var b = el('nk' + i);
+    if (b) { b.classList.toggle('on', i === n); }
+  }
+  buildKidCards();
+  calc();
+}
+
+function buildKidCards() {
+  var con = el('kidCards');
+  if (!con) return;
+  var COLORS = ['#f9a825', '#4fc3f7', '#a5d6a7', '#ce93d8'];
+  var NAMES  = ['Child 1', 'Child 2', 'Child 3', 'Child 4'];
+  var html   = '';
+
+  for (var i = 1; i <= numKids; i++) {
+    var c = COLORS[i - 1];
+    var n = NAMES[i - 1];
+
+    html += '<div class="kid-card" style="border-left-color:' + c + '">';
+    html += '<div class="kid-title" style="color:' + c + '">👶 ' + n + '</div>';
+
+    // age slider
+    html += sRow('k' + i + '_age', c, 'Current Age (0 = not yet born)', 0, 15, 1, 0, '0 — not born', 'Age');
+    // birth wrap
+    html += '<div id="kb' + i + '">' + sRow('k' + i + '_yrs', c, 'Years until born', 1, 5, 1, 2, '2 yrs', 'yr') + '</div>';
+
+    // school
+    html += '<div class="kid-section" style="color:#ffd54f">📚 School Education</div>';
+    html += sRow('k' + i + '_ss', '#ffd54f', 'School Start Age', 3, 6, 1, 3, 'Age 3', '');
+    html += sRow('k' + i + '_sf', '#ffd54f', 'Annual Fees (Today\'s ₹)', 30000, 2000000, 10000, 100000, '₹1L/yr', '');
+    html += sRow('k' + i + '_sd', '#ffd54f', 'School Duration', 10, 14, 1, 12, '12 yrs', 'yr');
+
+    // university
+    html += '<div class="kid-section" style="color:#29b6f6">🎓 University</div>';
+    html += sRow('k' + i + '_uc', '#29b6f6', 'Total Cost (Today\'s ₹)', 200000, 30000000, 100000, 2000000, '₹20L', '');
+
+    // marriage
+    html += '<div class="kid-section" style="color:#ce93d8">💍 Marriage</div>';
+    html += sRow('k' + i + '_mc', '#ce93d8', 'Cost (Today\'s ₹)', 200000, 10000000, 100000, 3000000, '₹30L', '');
+
+    // mini chart
+    html += '<div style="font-size:9px;color:#445566;text-transform:uppercase;letter-spacing:.06em;margin:10px 0 5px">Monthly SIP Breakdown</div>';
+    html += '<div style="display:flex;align-items:flex-end;gap:3px;height:50px;background:#060e18;border-radius:6px;padding:6px" id="kch' + i + '"></div>';
+
+    // results
+    html += '<div class="kid-result">';
+    html += '<div style="font-size:9px;color:#445566;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Corpus &amp; Monthly SIP</div>';
+    html += krow('kst' + i, 'Status', '—', '');
+    html += krow('ksc' + i, '📚 School Corpus', '—', '#ffd54f');
+    html += krow('kss' + i, '  School SIP/mo', '—', '#ffd54f');
+    html += krow('kuc' + i, '🎓 Univ Corpus', '—', '#29b6f6');
+    html += krow('kus' + i, '  Univ SIP/mo', '—', '#29b6f6');
+    html += krow('kmc' + i, '💍 Marriage Corpus', '—', '#ce93d8');
+    html += krow('kms' + i, '  Marriage SIP/mo', '—', '#ce93d8');
+    html += '<div class="krow" style="border-bottom:none"><span style="color:#e8f4ff;font-weight:700;font-size:11px">Total SIP/mo</span><span style="color:' + c + ';font-size:14px;font-weight:800" id="ktot' + i + '">—</span></div>';
+    html += '</div></div>';
+  }
+  con.innerHTML = html;
+}
+
+function sRow(id, color, label, min, max, step, defVal, defText, unit) {
+  return '<div class="sb">'
+    + '<div class="sr"><span>' + label + '</span><b id="lk_' + id + '" style="color:' + color + '">' + defText + '</b></div>'
+    + '<input type="range" id="sv_' + id + '" min="' + min + '" max="' + max + '" step="' + step + '" value="' + defVal + '" style="accent-color:' + color + '" oninput="calc()">'
+    + '<div class="slim"><span>' + (min >= 10000 ? f(min) : min + (unit ? unit : '')) + '</span><span>' + (max >= 10000 ? f(max) : max + (unit ? unit : '')) + '</span></div>'
+    + '</div>';
+}
+
+function krow(id, label, def, color) {
+  return '<div class="krow"><span style="color:#667788;font-size:11px">' + label + '</span>'
+    + '<span style="font-weight:700;font-size:11px;color:' + (color || '#c8dde8') + '" id="' + id + '">' + def + '</span></div>';
+}
+
+// ─── main calc ────────────────────────────────────
+function calc() {
+  var age      = val('sAge');
+  var retAge   = val('sRetAge');
+  var income   = val('sIncome');
+  var savPct   = val('sSavPct');
+  var infl     = val('sInfl');
+  var retRate  = val('sRet');
+  var postRate = val('sPostRet');
+  var existing = val('sExist');
+  var monExp   = val('sMonExp');
+  var firePct  = val('sFireSav');
+  var LIFE     = 85;
+
+  var ytr     = Math.max(retAge - age, 1);
+  var retYrs  = Math.max(LIFE - retAge, 1);
+  var savings = income * savPct / 100;
+  var mr      = retRate / 100 / 12;
+  var mos     = ytr * 12;
+  var fvF     = mos > 0 ? (Math.pow(1 + mr, mos) - 1) / mr * (1 + mr) : 1;
+
+  // retirement
+  var futExp   = monExp * Math.pow(1 + infl / 100, ytr);
+  var annExp   = futExp * 12;
+  var rr       = (postRate - infl) / 100;
+  var retC     = rr > 0 ? annExp * ((1 - Math.pow(1 + rr, -retYrs)) / rr) : annExp * retYrs;
+  var corpFV   = existing * Math.pow(1 + retRate / 100, ytr);
+  var shortf   = Math.max(retC - corpFV, 0);
+  var sipRet   = fvF > 0 ? shortf / fvF : 0;
+
+  // retirement growth points (for bar chart)
+  var retPts = [];
+  var ptCount = Math.min(ytr, 15);
+  for (var y = 0; y <= ptCount; y++) {
+    var yr = Math.round(y / ptCount * ytr);
+    var fv2 = sipRet * ((Math.pow(1 + mr, yr * 12) - 1) / mr * (1 + mr));
+    retPts.push(fv2 + existing * Math.pow(1 + retRate / 100, yr));
+  }
+
+  // child goals
+  var totChild = 0, totSchool = 0, totUniv = 0, totMarri = 0;
+  if (planChild) {
+    for (var i = 1; i <= numKids; i++) {
+      var cAge = val('sv_k' + i + '_age');
+      var cYrs = val('sv_k' + i + '_yrs');
+      var ss   = val('sv_k' + i + '_ss');
+      var sf   = val('sv_k' + i + '_sf');
+      var sd   = val('sv_k' + i + '_sd');
+      var uc   = val('sv_k' + i + '_uc');
+      var mc   = val('sv_k' + i + '_mc');
+
+      var born = cAge === 0 ? cYrs : 0;
+      var yts  = Math.max((ss - cAge) + born, 0.5);
+      var ytu  = Math.max((18 - cAge) + born, 1);
+      var ytm  = Math.max((25 - cAge) + born, 1);
+
+      var aSch = sf * Math.pow(1 + infl / 100, yts);
+      var sr2  = Math.max((retRate - infl) / 100, 0.01);
+      var schC = aSch * ((1 - Math.pow(1 + sr2, -sd)) / sr2);
+      var uniC = uc * Math.pow(1 + infl / 100, ytu);
+      var marC = mc * Math.pow(1 + infl / 100, ytm);
+
+      function sipFor(corpus, yrs) {
+        var n   = Math.max(yrs * 12, 1);
+        var fv3 = (Math.pow(1 + mr, n) - 1) / mr * (1 + mr);
+        return fv3 > 0 ? corpus / fv3 : 0;
+      }
+
+      var sS = sipFor(schC, yts);
+      var sU = sipFor(uniC, ytu);
+      var sM = sipFor(marC, ytm);
+      var sT = sS + sU + sM;
+
+      totSchool += sS; totUniv += sU; totMarri += sM; totChild += sT;
+
+      // update slider labels
+      set('lk_k' + i + '_age', cAge === 0 ? '0 — not born' : cAge + ' yrs old');
+      set('lk_k' + i + '_yrs', cYrs + ' yr' + (cYrs > 1 ? 's' : '') + ' from now');
+      set('lk_k' + i + '_ss',  'Age ' + ss);
+      set('lk_k' + i + '_sf',  f(sf) + '/yr');
+      set('lk_k' + i + '_sd',  sd + ' yrs');
+      set('lk_k' + i + '_uc',  f(uc));
+      set('lk_k' + i + '_mc',  f(mc));
+
+      // update results
+      set('kst' + i, cAge === 0 ? 'Not born (in ' + cYrs + ' yr' + (cYrs > 1 ? 's' : '') + ')' : cAge + ' yrs old');
+      set('ksc' + i, f(schC) + ' needed');
+      set('kss' + i, f(sS) + '/mo');
+      set('kuc' + i, f(uniC) + ' needed');
+      set('kus' + i, f(sU) + '/mo');
+      set('kmc' + i, f(marC) + ' needed');
+      set('kms' + i, f(sM) + '/mo');
+      set('ktot' + i, f(sT) + '/mo');
+
+      // show/hide birth wrap
+      var bw = el('kb' + i);
+      if (bw) bw.style.display = cAge === 0 ? 'block' : 'none';
+
+      // mini bar chart per child
+      miniBarChart('kch' + i, [
+        { l: 'School', v: sS, c: '#ffd54f' },
+        { l: 'Univ',   v: sU, c: '#29b6f6' },
+        { l: 'Marr.',  v: sM, c: '#ce93d8' }
+      ]);
+    }
+
+    // kid grand total
+    var ks = el('kidSummary');
+    if (ks) {
+      ks.innerHTML =
+        '<div class="trow"><span class="k" style="color:#ffd54f">📚 Total School SIP</span><span class="v" style="color:#ffd54f">' + f(totSchool) + '/mo</span></div>' +
+        '<div class="trow"><span class="k" style="color:#29b6f6">🎓 Total Univ SIP</span><span class="v" style="color:#29b6f6">' + f(totUniv) + '/mo</span></div>' +
+        '<div class="trow"><span class="k" style="color:#ce93d8">💍 Total Marriage SIP</span><span class="v" style="color:#ce93d8">' + f(totMarri) + '/mo</span></div>' +
+        '<div class="trow" style="border-bottom:none"><span class="k" style="color:#e8f4ff;font-weight:700">🧮 Grand Total</span><span class="v" style="color:#f9a825;font-size:14px">' + f(totChild) + '/mo</span></div>';
+    }
+    stackBar('kidSplitBar', 'kidSplitLegend', [
+      { l: 'School', v: totSchool, c: '#ffd54f' },
+      { l: 'Univ',   v: totUniv,   c: '#29b6f6' },
+      { l: 'Marr.',  v: totMarri,  c: '#ce93d8' }
+    ]);
+  }
+
+  // emergency fund
+  var efSIP = efCalc();
+
+  // FIRE
+  var fireC   = annExp * 25;
+  var sipFire = Math.max((fireC - corpFV) / fvF, 0);
+  var firePts = [];
+  for (var y = 0; y <= ptCount; y++) {
+    var yr2 = Math.round(y / ptCount * ytr);
+    var ffv = sipFire * ((Math.pow(1 + mr, yr2 * 12) - 1) / mr * (1 + mr));
+    firePts.push(ffv + existing * Math.pow(1 + retRate / 100, yr2));
+  }
+
+  // totals
+  var totalSIP = sipRet + (planChild ? totChild : 0) + efSIP;
+  var surplus  = savings - totalSIP;
+
+  // ── update DOM ──
+
+  // header
+  set('pAge',    age + ' yrs');
+  set('pIncome', f(income) + '/mo');
+  set('pSavings',f(savings) + '/mo');
+  set('pSIP',    f(totalSIP) + '/mo');
+  set('subLine', 'Age ' + age + ' · All values update live');
+
+  // overview sliders
+  set('vAge',     age + ' years old');
+  set('vIncome',  f(income));
+  set('vSavPct',  savPct + '% = ' + f(savings));
+  set('vInfl',    infl + '%');
+  set('vRet',     retRate + '%');
+  set('vPostRet', postRate + '%');
+  set('vExist',   f(existing));
+
+  // snapshot
+  set('snpRetire', 'Age ' + retAge);
+  set('snpYrs',    ytr + ' yrs away');
+  set('snpCorpus', f(retC));
+  set('snpSIP',    f(totalSIP));
+
+  // retirement progress bar
+  var rpct = retC > 0 ? Math.min((corpFV / retC) * 100, 100) : 0;
+  var rb = el('prRetBar');
+  if (rb) rb.style.width = rpct.toFixed(1) + '%';
+  set('prRetPct', rpct.toFixed(0) + '% funded');
+  set('prRetCur', 'FV: ' + f(corpFV));
+  set('prRetTgt', 'Target: ' + f(retC));
+
+  // child progress bar
+  var cpw = el('childPbarWrap');
+  if (cpw) cpw.style.display = planChild ? 'block' : 'none';
+  if (planChild && savings > 0) {
+    var cpct = Math.min((totChild / savings) * 100, 100);
+    var cb = el('prChildBar');
+    if (cb) cb.style.width = cpct.toFixed(1) + '%';
+    set('prChildPct', f(totChild) + '/mo');
+    set('prChildSIP', f(totChild));
+    set('prChildTgt', cpct.toFixed(0) + '% of savings');
+  }
+
+  // sip stack bar (overview)
+  var sipSegs = [{ l: 'Retirement', v: sipRet, c: '#4fc3f7' }];
+  if (planChild) sipSegs.push({ l: 'Children', v: totChild, c: '#f9a825' });
+  sipSegs.push({ l: 'Emergency', v: efSIP, c: '#a5d6a7' });
+  stackBar('sipStack', 'sipLegend', sipSegs);
+
+  // savings summary
+  set('mSav',      f(savings));
+  set('mNeed',     f(totalSIP));
+  set('mSurpVal',  f(Math.abs(surplus)));
+  set('mSurpLbl',  surplus >= 0 ? 'Surplus' : 'Gap');
+  set('mSurpSub',  surplus >= 0 ? 'Can invest more' : 'Increase savings');
+  var sc  = surplus >= 0 ? '#4fc3f7' : '#ef5350';
+  var msv = el('mSurpVal'); if (msv) msv.style.color = sc;
+  var msb = el('mSurpBox'); if (msb) msb.style.borderColor = sc + '44';
+
+  // retirement tab
+  set('vRetAge',  'Age ' + retAge + ' (' + ytr + ' yrs away)');
+  set('vMonExp',  f(monExp));
+  set('rAge',     age + ' years');
+  set('rRetire',  'Age ' + retAge + ' (' + ytr + ' yrs from now)');
+  set('rDur',     retYrs + ' yrs (till age ' + LIFE + ')');
+  set('rExpNow',  f(monExp) + '/mo');
+  set('rExpFut',  f(futExp) + '/mo');
+  set('rExpAnn',  f(annExp) + '/yr');
+  set('rCorpus',  f(retC));
+  set('rFV',      f(corpFV));
+  set('rShort',   f(shortf));
+  set('rSIP',     f(sipRet) + '/mo');
+  set('rInsight', 'At ' + f(sipRet) + '/mo SIP at ' + retRate + '% CAGR over ' + ytr + ' years you can build ' + f(retC) + '. Use step-up SIPs (10% annual increase) to accelerate growth and beat inflation.');
+  growthBars('retGrowthBars', retPts, retC, '#4fc3f7');
+  set('retGrowthMid', 'Yr ' + Math.floor(ytr / 2));
+  set('retGrowthEnd', 'Age ' + retAge + ' (' + f(retPts[retPts.length - 1]) + ')');
+
+  // FIRE tab
+  set('vFireSav', firePct + '% = ' + f(income * firePct / 100) + '/mo');
+  set('fCorpM', f(fireC));
+  set('fSIPM',  f(sipFire));
+  set('fAnn',   f(annExp));
+  set('fCorp',  f(fireC));
+  set('fFV',    f(corpFV));
+  set('fGap',   f(Math.max(fireC - corpFV, 0)));
+  set('fSIP',   f(sipFire) + '/mo');
+  set('fTotal', f(sipFire + (planChild ? totChild : 0)));
+  set('fInsight', 'FIRE at age ' + retAge + ' needs ' + f(fireC) + ' (25x annual expenses). The 4% rule is globally proven; for India use 3.3% (30x) to buffer higher inflation. At ' + savPct + '% savings you deploy ' + f(savings) + '/mo.');
+  growthBars('fireGrowthBars', firePts, fireC, '#ef5350');
+  set('fireGrowthEnd', 'Age ' + retAge + ' (' + f(firePts[firePts.length - 1]) + ')');
+
+  // action plan tab
+  var acr = el('apChildRow');
+  if (acr) acr.style.display = planChild ? 'flex' : 'none';
+  set('apRet',    f(sipRet) + '/mo');
+  set('apChild',  f(totChild) + '/mo');
+  set('apEF',     f(efSIP) + '/mo');
+  set('apTotal',  f(totalSIP) + '/mo');
+  var rem = savings - totalSIP;
+  set('apRemain', f(Math.abs(rem)) + (rem >= 0 ? ' available' : ' shortfall'));
+  var re = el('apRemain');
+  if (re) re.style.color = rem >= 0 ? '#4fc3f7' : '#ef5350';
+  stackBar('planStack', 'planLegend', [
+    { l: 'Retirement', v: sipRet,                        c: '#4fc3f7' },
+    { l: 'Children',   v: planChild ? totChild : 0,      c: '#f9a825' },
+    { l: 'Emergency',  v: efSIP,                         c: '#a5d6a7' }
+  ]);
+}
+
+// ─── init ─────────────────────────────────────────
+buildKidCards();
+efCalc();
+calc();
+</script>
+</body>
+</html>
