@@ -2,875 +2,328 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Corpus Planner</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'DM Mono','Courier New',monospace;background:#060e18;color:#c8dde8;min-height:100vh;padding:20px 14px 56px}
-.wrap{max-width:700px;margin:0 auto}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #060e18; color: #c8dde8; font-family: 'Courier New', monospace; padding: 16px; }
+.wrap { max-width: 680px; margin: 0 auto; }
 
-/* HEADER */
-.hdr{border-bottom:1px solid #1a2535;padding-bottom:18px;margin-bottom:20px}
-.hdr h1{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:#e8f4ff}
-.hdr-sub{margin-top:5px;font-size:11px;color:#556677}
-.pills{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
-.pill{background:#0a1e30;border:1px solid #1a3550;border-radius:8px;padding:5px 12px;font-size:11px}
-.pill .pk{color:#667788}
+h1 { font-size: 22px; font-weight: 900; color: #e8f4ff; margin-bottom: 4px; }
+.sub { font-size: 11px; color: #556677; margin-bottom: 10px; }
+.pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+.pill { background: #0a1e30; border: 1px solid #1a3550; border-radius: 6px; padding: 4px 10px; font-size: 11px; }
+.pill b { font-weight: 700; }
 
-/* TABS */
-.tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:20px}
-.tb{padding:6px 13px;border-radius:8px;border:none;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:.04em;font-family:'DM Mono',monospace;background:#111e2b;color:#556677;transition:all .2s}
-.tb.on{background:#4fc3f7;color:#000}
+/* tabs */
+.tabs { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 18px; }
+.tab { background: #111e2b; color: #556677; border: none; border-radius: 7px; padding: 6px 12px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.tab.on { background: #4fc3f7; color: #000; }
 
-/* PANELS */
-.panel{display:none}
-.panel.on{display:block}
+/* panels */
+.panel { display: none; }
+.panel.on { display: block; }
 
-/* CARD */
-.card{background:#0f1923;border-radius:12px;padding:18px 20px;margin-bottom:16px;border:1px solid transparent;border-left-width:3px;border-left-style:solid}
-.ctitle{display:flex;align-items:center;gap:9px;margin-bottom:13px}
-.ctitle .ico{font-size:17px}
-.ctitle h2{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+/* card */
+.card { background: #0f1923; border-radius: 10px; padding: 16px 18px; margin-bottom: 14px; border-left: 3px solid #4fc3f7; }
 
-/* SLIDERS */
-.sw{margin-bottom:13px}
-.sr{display:flex;justify-content:space-between;margin-bottom:5px;align-items:center}
-.sl{font-size:11px;color:#8899aa}
-.sv{font-size:12px;font-weight:700}
-.slm{display:flex;justify-content:space-between;font-size:9px;color:#445566;margin-top:2px}
-input[type=range]{width:100%;cursor:pointer;height:4px;border-radius:99px;outline:none;border:none}
+/* slider block */
+.sb { margin-bottom: 12px; }
+.sr { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 11px; }
+.sr span:first-child { color: #8899aa; }
+.sr b { font-weight: 700; }
+input[type=range] { width: 100%; height: 4px; cursor: pointer; border: none; outline: none; border-radius: 4px; display: block; }
+.slim { display: flex; justify-content: space-between; font-size: 9px; color: #445566; margin-top: 2px; }
 
-/* METRICS */
-.mrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
-.mb{background:#07111c;border-radius:10px;padding:12px 13px;flex:1;min-width:95px;border:1px solid transparent}
-.mlbl{font-size:9px;color:#667788;letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px}
-.mval{font-size:15px;font-weight:800}
-.msub{font-size:9px;color:#556677;margin-top:3px}
+/* metric row */
+.mrow { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+.mbox { background: #07111c; border-radius: 8px; padding: 10px 12px; flex: 1; min-width: 85px; border: 1px solid #1a2535; }
+.mbox .lbl { font-size: 9px; color: #667788; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+.mbox .val { font-size: 15px; font-weight: 800; }
+.mbox .sub { font-size: 9px; color: #556677; margin-top: 2px; }
 
-/* PROGRESS */
-.pw{margin-bottom:11px}
-.pt{display:flex;justify-content:space-between;margin-bottom:4px}
-.ptrack{background:#1a2535;border-radius:99px;height:7px;overflow:hidden}
-.pfill{height:100%;border-radius:99px;transition:width .35s ease}
-.pb{display:flex;justify-content:space-between;margin-top:3px;font-size:9px;color:#445566}
+/* progress bar */
+.pbar-wrap { margin: 10px 0; }
+.pbar-top { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 3px; }
+.pbar-track { background: #1a2535; border-radius: 99px; height: 6px; overflow: hidden; }
+.pbar-fill { height: 100%; border-radius: 99px; transition: width .3s; }
+.pbar-bot { display: flex; justify-content: space-between; font-size: 9px; color: #445566; margin-top: 2px; }
 
-/* TABLE */
-.dtbl{background:#07111c;border-radius:10px;padding:13px;margin-top:8px}
-.dlbl{font-size:9px;color:#445566;letter-spacing:.06em;text-transform:uppercase;margin-bottom:9px}
-.drow{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #0d1e2e;align-items:center}
-.drow:last-child{border-bottom:none}
-.dk{font-size:11px;color:#667788}
-.dv{font-size:11px;font-weight:700;color:#c8dde8}
+/* table */
+.tbl { background: #07111c; border-radius: 8px; padding: 12px; margin-top: 10px; }
+.tbl-lbl { font-size: 9px; color: #445566; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+.trow { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #0d1e2e; font-size: 11px; }
+.trow:last-child { border-bottom: none; }
+.trow .k { color: #667788; }
+.trow .v { font-weight: 700; color: #c8dde8; }
 
-/* INSIGHT */
-.ins{border-radius:10px;padding:13px;margin-top:13px}
-.ins-t{font-size:9px;margin-bottom:7px;letter-spacing:.06em;text-transform:uppercase}
-.ins p{font-size:11px;color:#8899aa;line-height:1.7}
-.ins p b{color:#c8dde8;font-weight:600}
+/* insight */
+.ins { background: #07111c; border-radius: 8px; padding: 12px; margin-top: 12px; }
+.ins .t { font-size: 9px; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; font-weight: 700; }
+.ins p { font-size: 11px; color: #8899aa; line-height: 1.7; }
+.ins p b { color: #c8dde8; }
 
-/* TOGGLE */
-.togbtn{border:none;border-radius:6px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Mono',monospace;transition:all .2s}
+/* child selector */
+.num-kids { display: flex; gap: 6px; margin-bottom: 14px; }
+.nk { background: #111e2b; color: #556677; border: none; border-radius: 6px; padding: 5px 0; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; flex: 1; }
+.nk.on { background: #f9a825; color: #000; }
 
-/* CHILD */
-.ctog{display:flex;align-items:center;gap:10px;margin-bottom:13px}
-.ctog span{font-size:11px;color:#8899aa}
-.sdiv{margin:11px 0 7px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #1a2535;padding-bottom:4px}
+/* child card */
+.kid-card { border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; border-left: 3px solid; background: #07111c; }
+.kid-title { font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; margin-bottom: 10px; }
+.kid-section { font-size: 9px; text-transform: uppercase; letter-spacing: .08em; padding-bottom: 4px; margin: 10px 0 7px; border-bottom: 1px solid #1a2535; }
+.kid-result { background: #060e18; border-radius: 7px; padding: 10px; margin-top: 8px; }
+.krow { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #0d1e2e; font-size: 11px; }
+.krow:last-child { border-bottom: none; }
 
-/* CHART */
-.cht{margin:13px 0}
-.cht-t{font-size:9px;color:#445566;letter-spacing:.06em;text-transform:uppercase;margin-bottom:7px}
+/* stacked bar */
+.stack-bar { display: flex; height: 18px; border-radius: 5px; overflow: hidden; margin: 8px 0; }
+.stack-seg { display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #000; transition: width .3s; }
+.stack-legend { display: flex; flex-wrap: wrap; gap: 5px 10px; margin-top: 6px; }
+.stack-legend .item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #8899aa; }
+.stack-legend .dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
 
-/* DISCLAIMER */
-.disc{margin-top:20px;padding:13px;background:#070f18;border-radius:10px;border:1px solid #1a2535;font-size:10px;color:#334455;line-height:1.7}
+/* toggle */
+.togbtn { border: none; border-radius: 6px; padding: 4px 14px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.child-tog { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 11px; color: #8899aa; }
 
-@media(max-width:480px){.mrow{flex-direction:column}.mb{min-width:unset}.hdr h1{font-size:20px}}
+.disc { margin-top: 18px; padding: 12px; background: #070f18; border-radius: 8px; border: 1px solid #1a2535; font-size: 10px; color: #334455; line-height: 1.7; }
+@media(max-width:480px){ .mrow { flex-direction: column; } }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-<!-- HEADER -->
-<div class="hdr">
-  <h1>Corpus Planner</h1>
-  <div class="hdr-sub" id="hdrSub">Age 25 \u00b7 All values update live</div>
-  <div class="pills">
-    <div class="pill"><span class="pk">Age: </span><span id="pAge" style="color:#ce93d8;font-weight:700">25 yrs</span></div>
-    <div class="pill"><span class="pk">Income: </span><span id="pIncome" style="color:#4fc3f7;font-weight:700">\u20b91L/mo</span></div>
-    <div class="pill"><span class="pk">Savings: </span><span id="pSavings" style="color:#a5d6a7;font-weight:700">\u20b930K/mo</span></div>
-    <div class="pill"><span class="pk">Total SIP: </span><span id="pSIP" style="color:#f9a825;font-weight:700">\u2014</span></div>
-  </div>
+<h1>Corpus Planner</h1>
+<div class="sub" id="subLine">Age 25 · All values update live</div>
+<div class="pills">
+  <div class="pill">Age: <b id="pAge" style="color:#ce93d8">25 yrs</b></div>
+  <div class="pill">Income: <b id="pIncome" style="color:#4fc3f7">₹1L/mo</b></div>
+  <div class="pill">Savings: <b id="pSavings" style="color:#a5d6a7">₹30K/mo</b></div>
+  <div class="pill">Total SIP: <b id="pSIP" style="color:#f9a825">—</b></div>
 </div>
 
-<!-- TABS -->
 <div class="tabs">
-  <button class="tb on" onclick="tab('overview')">Overview</button>
-  <button class="tb" onclick="tab('retirement')">Retirement</button>
-  <button class="tb" onclick="tab('child')">Child Goals</button>
-  <button class="tb" onclick="tab('fire')">FIRE</button>
-  <button class="tb" onclick="tab('emergency')">Emergency Fund</button>
-  <button class="tb" onclick="tab('plan')">Action Plan</button>
+  <button class="tab on" onclick="showTab('overview')">Overview</button>
+  <button class="tab" onclick="showTab('retirement')">Retirement</button>
+  <button class="tab" onclick="showTab('child')">Child Goals</button>
+  <button class="tab" onclick="showTab('fire')">FIRE</button>
+  <button class="tab" onclick="showTab('emergency')">Emergency Fund</button>
+  <button class="tab" onclick="showTab('plan')">Action Plan</button>
 </div>
 
-<!-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 OVERVIEW \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 -->
-<div class="panel on" id="p-overview">
+<!-- ===== OVERVIEW ===== -->
+<div class="panel on" id="tab-overview">
 
-  <div class="card" style="border-color:#4fc3f733;border-left-color:#4fc3f7">
-    <div class="ctitle"><span class="ico">\ud83d\udcca</span><h2 style="color:#4fc3f7">Financial Snapshot</h2></div>
+  <div class="card" style="border-left-color:#4fc3f7">
+    <div style="font-size:12px;font-weight:700;color:#4fc3f7;margin-bottom:12px">📊 FINANCIAL SNAPSHOT</div>
     <div class="mrow">
-      <div class="mb" style="border-color:#4fc3f733">
-        <div class="mlbl">Retire At</div>
-        <div class="mval" style="color:#4fc3f7" id="snpRetire">Age 55</div>
-        <div class="msub" id="snpYrs">30 yrs away</div>
-      </div>
-      <div class="mb" style="border-color:#f9a82533">
-        <div class="mlbl">Corpus Needed</div>
-        <div class="mval" style="color:#f9a825" id="snpCorpus">\u2014</div>
-        <div class="msub">For retirement</div>
-      </div>
-      <div class="mb" style="border-color:#a5d6a733">
-        <div class="mlbl">Total SIP</div>
-        <div class="mval" style="color:#a5d6a7" id="snpSIP">\u2014</div>
-        <div class="msub">All goals / mo</div>
+      <div class="mbox"><div class="lbl">Retire At</div><div class="val" style="color:#4fc3f7" id="snpRetire">Age 55</div><div class="sub" id="snpYrs">30 yrs away</div></div>
+      <div class="mbox"><div class="lbl">Corpus Needed</div><div class="val" style="color:#f9a825" id="snpCorpus">—</div><div class="sub">For retirement</div></div>
+      <div class="mbox"><div class="lbl">Total SIP</div><div class="val" style="color:#a5d6a7" id="snpSIP">—</div><div class="sub">All goals/mo</div></div>
+    </div>
+    <div class="pbar-wrap">
+      <div class="pbar-top"><span style="color:#8899aa">Retirement Corpus</span><span style="color:#4fc3f7" id="prRetPct">0% funded</span></div>
+      <div class="pbar-track"><div class="pbar-fill" id="prRetBar" style="width:0%;background:linear-gradient(90deg,#4fc3f788,#4fc3f7)"></div></div>
+      <div class="pbar-bot"><span id="prRetCur">FV: —</span><span id="prRetTgt">Target: —</span></div>
+    </div>
+    <div id="childPbarWrap" style="display:none">
+      <div class="pbar-wrap">
+        <div class="pbar-top"><span style="color:#8899aa">Child Goals SIP</span><span style="color:#f9a825" id="prChildPct">—</span></div>
+        <div class="pbar-track"><div class="pbar-fill" id="prChildBar" style="width:0%;background:linear-gradient(90deg,#f9a82588,#f9a825)"></div></div>
+        <div class="pbar-bot"><span>SIP: <span id="prChildSIP">—</span></span><span id="prChildTgt">of savings</span></div>
       </div>
     </div>
-    <div style="margin-top:13px">
-      <div class="pw">
-        <div class="pt"><span style="font-size:10px;color:#8899aa">Retirement Corpus</span><span style="font-size:9px;color:#4fc3f7" id="prRetPct">0% funded</span></div>
-        <div class="ptrack"><div class="pfill" id="prRetBar" style="width:0%;background:linear-gradient(90deg,#4fc3f788,#4fc3f7)"></div></div>
-        <div class="pb"><span id="prRetCur">FV: \u2014</span><span id="prRetTgt">Target: \u2014</span></div>
-      </div>
-      <div class="pw" id="prChildWrap" style="display:none">
-        <div class="pt"><span style="font-size:10px;color:#8899aa">Child Goals SIP</span><span style="font-size:9px;color:#f9a825" id="prChildPct">\u2014</span></div>
-        <div class="ptrack"><div class="pfill" id="prChildBar" style="width:0%;background:linear-gradient(90deg,#f9a82588,#f9a825)"></div></div>
-        <div class="pb"><span>SIP: <span id="prChildSIP">\u2014</span></span><span id="prChildTgt">of savings</span></div>
-      </div>
-    </div>
-    <div class="cht">
-      <div class="cht-t">Monthly SIP Breakdown</div>
-      <canvas id="cvSIPBreak" height="88" style="width:100%"></canvas>
-      <div id="lgSIPBreak" style="display:flex;flex-wrap:wrap;gap:5px 10px;margin-top:7px"></div>
+    <div style="margin-top:12px">
+      <div style="font-size:9px;color:#445566;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Monthly SIP Breakdown</div>
+      <div class="stack-bar" id="sipStack"></div>
+      <div class="stack-legend" id="sipLegend"></div>
     </div>
   </div>
 
-  <div class="card" style="border-color:#ffd54f33;border-left-color:#ffd54f">
-    <div class="ctitle"><span class="ico">\ud83d\udc64</span><h2 style="color:#ffd54f">Income & Profile</h2></div>
-    <div class="sw">
-      <div class="sr"><span class="sl">Current Age</span><span class="sv" id="vAge" style="color:#ce93d8">25 yrs</span></div>
-      <input type="range" id="sAge" min="22" max="55" step="1" value="25" style="accent-color:#ce93d8" oninput="onAge(this.value)">
-      <div class="slm"><span>22</span><span>55</span></div>
+  <div class="card" style="border-left-color:#ffd54f">
+    <div style="font-size:12px;font-weight:700;color:#ffd54f;margin-bottom:12px">👤 INCOME & PROFILE</div>
+    <div class="sb">
+      <div class="sr"><span>Current Age</span><b id="vAge" style="color:#ce93d8">25 yrs</b></div>
+      <input type="range" id="sAge" min="22" max="55" step="1" value="25" style="accent-color:#ce93d8" oninput="onAgeChange(this.value)">
+      <div class="slim"><span>22</span><span>55</span></div>
     </div>
-    <div class="sw">
-      <div class="sr"><span class="sl">Monthly Take-Home Salary</span><span class="sv" id="vIncome" style="color:#ffd54f">\u20b91L</span></div>
+    <div class="sb">
+      <div class="sr"><span>Monthly Take-Home Salary</span><b id="vIncome" style="color:#ffd54f">₹1L</b></div>
       <input type="range" id="sIncome" min="10000" max="1000000" step="10000" value="100000" style="accent-color:#ffd54f" oninput="calc()">
-      <div class="slm"><span>\u20b910K</span><span>\u20b910L</span></div>
+      <div class="slim"><span>₹10K</span><span>₹10L</span></div>
     </div>
   </div>
 
-  <div class="card" style="border-color:#a5d6a733;border-left-color:#a5d6a7">
-    <div class="ctitle"><span class="ico">\ud83d\udcb0</span><h2 style="color:#a5d6a7">Savings</h2></div>
-    <div class="sw">
-      <div class="sr"><span class="sl">Monthly Savings %</span><span class="sv" id="vSavPct" style="color:#a5d6a7">30%</span></div>
+  <div class="card" style="border-left-color:#a5d6a7">
+    <div style="font-size:12px;font-weight:700;color:#a5d6a7;margin-bottom:12px">💰 SAVINGS</div>
+    <div class="sb">
+      <div class="sr"><span>Monthly Savings %</span><b id="vSavPct" style="color:#a5d6a7">30% = ₹30K</b></div>
       <input type="range" id="sSavPct" min="5" max="70" step="5" value="30" style="accent-color:#a5d6a7" oninput="calc()">
-      <div class="slm"><span>5%</span><span>70%</span></div>
+      <div class="slim"><span>5%</span><span>70%</span></div>
     </div>
     <div class="mrow">
-      <div class="mb" style="border-color:#a5d6a733">
-        <div class="mlbl">Savings / Month</div>
-        <div class="mval" style="color:#a5d6a7" id="mSavings">\u20b930K</div>
-        <div class="msub">To invest</div>
-      </div>
-      <div class="mb" style="border-color:#f9a82533">
-        <div class="mlbl">SIP Needed</div>
-        <div class="mval" style="color:#f9a825" id="mSIPNeeded">\u2014</div>
-        <div class="msub">All goals</div>
-      </div>
-      <div class="mb" id="mSurplusBox" style="border-color:#4fc3f733">
-        <div class="mlbl" id="mSurplusLbl">Surplus</div>
-        <div class="mval" id="mSurplusVal" style="color:#4fc3f7">\u2014</div>
-        <div class="msub" id="mSurplusSub">Can invest more</div>
-      </div>
+      <div class="mbox"><div class="lbl">Savings/Mo</div><div class="val" style="color:#a5d6a7" id="mSav">₹30K</div><div class="sub">To invest</div></div>
+      <div class="mbox"><div class="lbl">SIP Needed</div><div class="val" style="color:#f9a825" id="mNeed">—</div><div class="sub">All goals</div></div>
+      <div class="mbox" id="mSurpBox"><div class="lbl" id="mSurpLbl">Surplus</div><div class="val" id="mSurpVal" style="color:#4fc3f7">—</div><div class="sub" id="mSurpSub">Can invest more</div></div>
     </div>
   </div>
 
-  <div class="card" style="border-color:#ce93d833;border-left-color:#ce93d8">
-    <div class="ctitle"><span class="ico">\u2699\ufe0f</span><h2 style="color:#ce93d8">Key Assumptions</h2></div>
-    <div class="sw">
-      <div class="sr"><span class="sl">Inflation Rate</span><span class="sv" id="vInflation" style="color:#ce93d8">6%</span></div>
-      <input type="range" id="sInflation" min="4" max="9" step="0.5" value="6" style="accent-color:#ce93d8" oninput="calc()">
-      <div class="slm"><span>4%</span><span>9%</span></div>
+  <div class="card" style="border-left-color:#ce93d8">
+    <div style="font-size:12px;font-weight:700;color:#ce93d8;margin-bottom:12px">⚙️ KEY ASSUMPTIONS</div>
+    <div class="sb">
+      <div class="sr"><span>Inflation Rate</span><b id="vInfl" style="color:#ce93d8">6%</b></div>
+      <input type="range" id="sInfl" min="4" max="9" step="0.5" value="6" style="accent-color:#ce93d8" oninput="calc()">
+      <div class="slim"><span>4%</span><span>9%</span></div>
     </div>
-    <div class="sw">
-      <div class="sr"><span class="sl">Pre-retirement Return (CAGR)</span><span class="sv" id="vReturn" style="color:#ce93d8">12%</span></div>
-      <input type="range" id="sReturn" min="8" max="15" step="0.5" value="12" style="accent-color:#ce93d8" oninput="calc()">
-      <div class="slm"><span>8%</span><span>15%</span></div>
+    <div class="sb">
+      <div class="sr"><span>Pre-retirement Return (CAGR)</span><b id="vRet" style="color:#ce93d8">12%</b></div>
+      <input type="range" id="sRet" min="8" max="15" step="0.5" value="12" style="accent-color:#ce93d8" oninput="calc()">
+      <div class="slim"><span>8%</span><span>15%</span></div>
     </div>
-    <div class="sw">
-      <div class="sr"><span class="sl">Post-retirement Return</span><span class="sv" id="vPostReturn" style="color:#ce93d8">8%</span></div>
-      <input type="range" id="sPostReturn" min="6" max="10" step="0.5" value="8" style="accent-color:#ce93d8" oninput="calc()">
-      <div class="slm"><span>6%</span><span>10%</span></div>
+    <div class="sb">
+      <div class="sr"><span>Post-retirement Return</span><b id="vPostRet" style="color:#ce93d8">8%</b></div>
+      <input type="range" id="sPostRet" min="6" max="10" step="0.5" value="8" style="accent-color:#ce93d8" oninput="calc()">
+      <div class="slim"><span>6%</span><span>10%</span></div>
     </div>
-    <div class="sw">
-      <div class="sr"><span class="sl">Existing Investments</span><span class="sv" id="vExisting" style="color:#ce93d8">\u20b90</span></div>
-      <input type="range" id="sExisting" min="0" max="10000000" step="50000" value="0" style="accent-color:#ce93d8" oninput="calc()">
-      <div class="slm"><span>\u20b90</span><span>\u20b91Cr</span></div>
+    <div class="sb">
+      <div class="sr"><span>Existing Investments</span><b id="vExist" style="color:#ce93d8">₹0</b></div>
+      <input type="range" id="sExist" min="0" max="10000000" step="50000" value="0" style="accent-color:#ce93d8" oninput="calc()">
+      <div class="slim"><span>₹0</span><span>₹1Cr</span></div>
     </div>
   </div>
 </div>
 
-<!-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 RETIREMENT \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 -->
-<div class="panel" id="p-retirement">
-  <div class="card" style="border-color:#4fc3f733;border-left-color:#4fc3f7">
-    <div class="ctitle"><span class="ico">\ud83c\udfd6\ufe0f</span><h2 style="color:#4fc3f7">Retirement Planning</h2></div>
-    <div class="sw">
-      <div class="sr"><span class="sl">Target Retirement Age</span><span class="sv" id="vRetireAge" style="color:#4fc3f7">Age 55</span></div>
-      <input type="range" id="sRetireAge" min="45" max="65" step="1" value="55" style="accent-color:#4fc3f7" oninput="calc()">
-      <div class="slm"><span>45</span><span>65</span></div>
+<!-- ===== RETIREMENT ===== -->
+<div class="panel" id="tab-retirement">
+  <div class="card" style="border-left-color:#4fc3f7">
+    <div style="font-size:12px;font-weight:700;color:#4fc3f7;margin-bottom:12px">🏖️ RETIREMENT PLANNING</div>
+    <div class="sb">
+      <div class="sr"><span>Target Retirement Age</span><b id="vRetAge" style="color:#4fc3f7">Age 55</b></div>
+      <input type="range" id="sRetAge" min="45" max="65" step="1" value="55" style="accent-color:#4fc3f7" oninput="calc()">
+      <div class="slim"><span>45</span><span>65</span></div>
     </div>
-    <div class="sw">
-      <div class="sr"><span class="sl">Current Monthly Expenses</span><span class="sv" id="vMonthExp" style="color:#4fc3f7">\u20b970K</span></div>
-      <input type="range" id="sMonthExp" min="10000" max="500000" step="5000" value="70000" style="accent-color:#4fc3f7" oninput="calc()">
-      <div class="slm"><span>\u20b910K</span><span>\u20b95L</span></div>
+    <div class="sb">
+      <div class="sr"><span>Current Monthly Expenses</span><b id="vMonExp" style="color:#4fc3f7">₹70K</b></div>
+      <input type="range" id="sMonExp" min="10000" max="500000" step="5000" value="70000" style="accent-color:#4fc3f7" oninput="calc()">
+      <div class="slim"><span>₹10K</span><span>₹5L</span></div>
     </div>
-    <div class="cht">
-      <div class="cht-t">Projected Corpus Growth</div>
-      <canvas id="cvRetGrowth" height="150" style="width:100%"></canvas>
+
+    <!-- Simple corpus growth visual using divs -->
+    <div style="margin:14px 0">
+      <div style="font-size:9px;color:#445566;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Corpus Growth Projection</div>
+      <div style="display:flex;align-items:flex-end;gap:2px;height:80px;background:#07111c;border-radius:8px;padding:8px">
+        <div id="retGrowthBars" style="display:flex;align-items:flex-end;gap:2px;width:100%;height:100%"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:9px;color:#445566;margin-top:3px">
+        <span>Now</span><span id="retGrowthMid">—</span><span id="retGrowthEnd">At retirement</span>
+      </div>
     </div>
-    <div class="dtbl">
-      <div class="dlbl">Retirement Calculator</div>
-      <div class="drow"><span class="dk">Current Age</span><span class="dv" id="rCurAge">25 yrs</span></div>
-      <div class="drow"><span class="dk">Retire At</span><span class="dv" id="rRetireAt">\u2014</span></div>
-      <div class="drow"><span class="dk">Retirement Duration</span><span class="dv" id="rDuration">\u2014</span></div>
-      <div class="drow"><span class="dk">Monthly Expenses Today</span><span class="dv" id="rExpToday">\u2014</span></div>
-      <div class="drow"><span class="dk">Monthly Expenses at Retirement</span><span class="dv" id="rExpRetire">\u2014</span></div>
-      <div class="drow"><span class="dk">Annual Expenses at Retirement</span><span class="dv" id="rExpAnnual">\u2014</span></div>
-      <div class="drow"><span class="dk">Corpus Required</span><span class="dv" style="color:#f9a825" id="rCorpusReq">\u2014</span></div>
-      <div class="drow"><span class="dk">FV of Existing Investments</span><span class="dv" id="rCorpusFV">\u2014</span></div>
-      <div class="drow"><span class="dk">Shortfall</span><span class="dv" id="rShortfall">\u2014</span></div>
-      <div class="drow"><span class="dk" style="color:#e8f4ff">Monthly SIP Required</span><span class="dv" style="color:#4fc3f7;font-size:13px" id="rSIP">\u2014</span></div>
+
+    <div class="tbl">
+      <div class="tbl-lbl">Retirement Calculator</div>
+      <div class="trow"><span class="k">Current Age</span><span class="v" id="rAge">25 yrs</span></div>
+      <div class="trow"><span class="k">Retire At</span><span class="v" id="rRetire">—</span></div>
+      <div class="trow"><span class="k">Retirement Duration</span><span class="v" id="rDur">—</span></div>
+      <div class="trow"><span class="k">Monthly Expenses Today</span><span class="v" id="rExpNow">—</span></div>
+      <div class="trow"><span class="k">Monthly Expenses at Retirement</span><span class="v" id="rExpFut">—</span></div>
+      <div class="trow"><span class="k">Annual Expenses at Retirement</span><span class="v" id="rExpAnn">—</span></div>
+      <div class="trow"><span class="k">Corpus Required</span><span class="v" style="color:#f9a825" id="rCorpus">—</span></div>
+      <div class="trow"><span class="k">FV of Existing Investments</span><span class="v" id="rFV">—</span></div>
+      <div class="trow"><span class="k">Shortfall</span><span class="v" id="rShort">—</span></div>
+      <div class="trow"><span class="k" style="color:#e8f4ff;font-weight:700">Monthly SIP Required</span><span class="v" style="color:#4fc3f7;font-size:13px" id="rSIP">—</span></div>
     </div>
-    <div class="ins" style="background:#07111c;border:1px solid #4fc3f722">
-      <div class="ins-t" style="color:#4fc3f7">\ud83d\udca1 Insight</div>
-      <p id="rInsight">\u2014</p>
+    <div class="ins">
+      <div class="t" style="color:#4fc3f7">💡 Insight</div>
+      <p id="rInsight">—</p>
     </div>
   </div>
 </div>
 
-<!-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 CHILD GOALS \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 -->
-<div class="panel" id="p-child">
-  <div class="card" style="border-color:#f9a82533;border-left-color:#f9a825">
-    <div class="ctitle"><span class="ico">\ud83c\udf93</span><h2 style="color:#f9a825">Child Goals Planner</h2></div>
-    <div class="ctog">
+<!-- ===== CHILD GOALS ===== -->
+<div class="panel" id="tab-child">
+  <div class="card" style="border-left-color:#f9a825">
+    <div style="font-size:12px;font-weight:700;color:#f9a825;margin-bottom:12px">🎓 CHILD GOALS PLANNER</div>
+    <div class="child-tog">
       <span>Plan for children?</span>
       <button class="togbtn" id="childBtn" onclick="toggleChild()" style="background:#f9a825;color:#000">YES</button>
     </div>
     <div id="childContent">
-      <div style="margin-bottom:14px">
-        <div style="font-size:9px;color:#8899aa;margin-bottom:7px;letter-spacing:.04em">NUMBER OF CHILDREN</div>
-        <div style="display:flex;gap:7px">
-          <button onclick="setKids(1)" id="nc1" class="togbtn" style="background:#f9a825;color:#000;flex:1">1</button>
-          <button onclick="setKids(2)" id="nc2" class="togbtn" style="background:#111e2b;color:#556677;flex:1">2</button>
-          <button onclick="setKids(3)" id="nc3" class="togbtn" style="background:#111e2b;color:#556677;flex:1">3</button>
-          <button onclick="setKids(4)" id="nc4" class="togbtn" style="background:#111e2b;color:#556677;flex:1">4</button>
-        </div>
+      <div style="font-size:9px;color:#8899aa;margin-bottom:7px;letter-spacing:.04em">NUMBER OF CHILDREN</div>
+      <div class="num-kids">
+        <button class="nk on" id="nk1" onclick="setKids(1)">1</button>
+        <button class="nk" id="nk2" onclick="setKids(2)">2</button>
+        <button class="nk" id="nk3" onclick="setKids(3)">3</button>
+        <button class="nk" id="nk4" onclick="setKids(4)">4</button>
       </div>
       <div id="kidCards"></div>
-      <div style="background:#07111c;border:1px solid #f9a82544;border-radius:12px;padding:14px;margin-top:4px">
-        <div style="font-size:9px;color:#f9a825;letter-spacing:.08em;text-transform:uppercase;margin-bottom:9px">\ud83d\udcca Grand Total \u2014 All Children</div>
-        <div class="cht-t">SIP Split</div>
-        <canvas id="cvKidSplit" height="16" style="width:100%;border-radius:6px;overflow:hidden;margin-bottom:10px"></canvas>
-        <div id="kidSummary"></div>
+
+      <!-- Grand total -->
+      <div style="background:#07111c;border:1px solid #f9a82544;border-radius:10px;padding:14px;margin-top:4px">
+        <div style="font-size:9px;color:#f9a825;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">📊 Grand Total — All Children</div>
+        <div style="font-size:9px;color:#445566;margin-bottom:5px">SIP Split</div>
+        <div class="stack-bar" id="kidSplitBar"></div>
+        <div class="stack-legend" id="kidSplitLegend"></div>
+        <div id="kidSummary" style="margin-top:10px"></div>
       </div>
-      <div class="ins" style="background:#07111c;border:1px solid #f9a82522">
-        <div class="ins-t" style="color:#f9a825">\ud83d\udca1 Insight</div>
-        <p>Start dedicated SIPs at birth. Use <b>Sukanya Samriddhi Yojana</b> (girl child) for marriage \u2014 ~8% tax-free. For school, use a <b>debt fund ladder</b>. For university, go equity now, shift to debt 3 yrs before. Consider <b>education loans</b> for premier institutes to protect your corpus.</p>
+
+      <div class="ins" style="margin-top:12px">
+        <div class="t" style="color:#f9a825">💡 Insight</div>
+        <p>Start dedicated SIPs at birth. Use <b>Sukanya Samriddhi Yojana</b> (girl child) for marriage — ~8% tax-free. For school use a <b>debt fund ladder</b>. For university, go equity now and shift to debt 3 years before. Consider <b>education loans</b> for premier institutes.</p>
       </div>
     </div>
   </div>
 </div>
 
-<!-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 FIRE \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 -->
-<div class="panel" id="p-fire">
-  <div class="card" style="border-color:#ef535033;border-left-color:#ef5350">
-    <div class="ctitle"><span class="ico">\ud83d\udd25</span><h2 style="color:#ef5350">FIRE \u2014 Financial Independence</h2></div>
+<!-- ===== FIRE ===== -->
+<div class="panel" id="tab-fire">
+  <div class="card" style="border-left-color:#ef5350">
+    <div style="font-size:12px;font-weight:700;color:#ef5350;margin-bottom:12px">🔥 FIRE — FINANCIAL INDEPENDENCE</div>
     <div class="mrow">
-      <div class="mb" style="border-color:#ef535033">
-        <div class="mlbl">FIRE Corpus</div>
-        <div class="mval" style="color:#ef5350" id="fCorpus">\u2014</div>
-        <div class="msub">25x annual expenses</div>
+      <div class="mbox"><div class="lbl">FIRE Corpus</div><div class="val" style="color:#ef5350" id="fCorpM">—</div><div class="sub">25x annual expenses</div></div>
+      <div class="mbox"><div class="lbl">Monthly SIP</div><div class="val" style="color:#f9a825" id="fSIPM">—</div><div class="sub">For FIRE alone</div></div>
+    </div>
+
+    <!-- FIRE visual -->
+    <div style="margin:14px 0">
+      <div style="font-size:9px;color:#445566;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">FIRE Corpus Projection</div>
+      <div style="display:flex;align-items:flex-end;gap:2px;height:80px;background:#07111c;border-radius:8px;padding:8px">
+        <div id="fireGrowthBars" style="display:flex;align-items:flex-end;gap:2px;width:100%;height:100%"></div>
       </div>
-      <div class="mb" style="border-color:#f9a82533">
-        <div class="mlbl">Monthly SIP</div>
-        <div class="mval" style="color:#f9a825" id="fSIPm">\u2014</div>
-        <div class="msub">For FIRE alone</div>
+      <div style="display:flex;justify-content:space-between;font-size:9px;color:#445566;margin-top:3px">
+        <span>Now</span><span></span><span id="fireGrowthEnd">At retirement</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;margin-top:5px;font-size:10px;color:#8899aa">
+        <div style="width:10px;height:10px;background:#ef5350;border-radius:2px"></div><span>Projected</span>
+        <div style="width:10px;height:3px;background:#ef535066;border-radius:2px;margin-left:8px"></div><span>FIRE target</span>
       </div>
     </div>
-    <div class="cht" style="margin-top:13px">
-      <div class="cht-t">Projected Corpus vs FIRE Target</div>
-      <canvas id="cvFire" height="140" style="width:100%"></canvas>
+
+    <div class="tbl">
+      <div class="tbl-lbl">25x Rule (4% Safe Withdrawal)</div>
+      <div class="trow"><span class="k">Annual Expenses at Retirement</span><span class="v" id="fAnn">—</span></div>
+      <div class="trow"><span class="k">FIRE Corpus (25x)</span><span class="v" style="color:#ef5350" id="fCorp">—</span></div>
+      <div class="trow"><span class="k">FV of Existing Investments</span><span class="v" id="fFV">—</span></div>
+      <div class="trow"><span class="k">Gap to Fill</span><span class="v" id="fGap">—</span></div>
+      <div class="trow"><span class="k">Monthly SIP for FIRE</span><span class="v" style="color:#ef5350" id="fSIP">—</span></div>
+      <div class="trow"><span class="k">FIRE + Child Goals</span><span class="v" id="fTotal">—</span></div>
     </div>
-    <div class="dtbl">
-      <div class="dlbl">25x Rule (4% Withdrawal)</div>
-      <div class="drow"><span class="dk">Annual Expenses at Retirement</span><span class="dv" id="fAnnExp">\u2014</span></div>
-      <div class="drow"><span class="dk">FIRE Corpus (25x)</span><span class="dv" style="color:#ef5350" id="fCorpus2">\u2014</span></div>
-      <div class="drow"><span class="dk">FV of Existing Investments</span><span class="dv" id="fFV">\u2014</span></div>
-      <div class="drow"><span class="dk">Gap to Fill</span><span class="dv" id="fGap">\u2014</span></div>
-      <div class="drow"><span class="dk">Monthly SIP for FIRE</span><span class="dv" style="color:#ef5350" id="fSIP">\u2014</span></div>
-      <div class="drow"><span class="dk">FIRE + Child Goals</span><span class="dv" id="fTotal">\u2014</span></div>
-    </div>
-    <div class="sw" style="margin-top:13px">
-      <div class="sr"><span class="sl">Scenario Savings %</span><span class="sv" id="vFireSav" style="color:#ef5350">40%</span></div>
+    <div class="sb" style="margin-top:12px">
+      <div class="sr"><span>Scenario Savings %</span><b id="vFireSav" style="color:#ef5350">40%</b></div>
       <input type="range" id="sFireSav" min="20" max="70" step="5" value="40" style="accent-color:#ef5350" oninput="calc()">
-      <div class="slm"><span>20%</span><span>70%</span></div>
+      <div class="slim"><span>20%</span><span>70%</span></div>
     </div>
-    <div class="ins" style="background:#07111c;border:1px solid #ef535022">
-      <div class="ins-t" style="color:#ef5350">\ud83d\udca1 Insight</div>
-      <p id="fInsight">\u2014</p>
-    </div>
-  </div>
-</div>
-
-<!-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 EMERGENCY FUND \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 -->
-<div class="panel" id="p-emergency">
-  <div class="card" style="border-color:#a5d6a733;border-left-color:#a5d6a7">
-    <div class="ctitle"><span class="ico">\ud83d\udee1\ufe0f</span><h2 style="color:#a5d6a7">Emergency Fund Planner</h2></div>
-    <div class="mrow" style="margin-bottom:14px">
-      <div class="mb" style="border-color:#a5d6a733">
-        <div class="mlbl">Target Fund</div>
-        <div class="mval" style="color:#a5d6a7" id="efTarget">\u2014</div>
-        <div class="msub" id="efTargetSub">6 months of expenses</div>
-      </div>
-      <div class="mb" style="border-color:#4fc3f733">
-        <div class="mlbl">Already Saved</div>
-        <div class="mval" style="color:#4fc3f7" id="efSavedM">\u20b90</div>
-        <div class="msub">Current balance</div>
-      </div>
-      <div class="mb" style="border-color:#f9a82533">
-        <div class="mlbl">Monthly SIP</div>
-        <div class="mval" style="color:#f9a825" id="efSIPm">\u2014</div>
-        <div class="msub">To build fund</div>
-      </div>
-    </div>
-    <div class="sw">
-      <div class="sr"><span class="sl">Monthly Expenses</span><span class="sv" id="vEfExp" style="color:#a5d6a7">\u20b970K</span></div>
-      <input type="range" id="sEfExp" min="10000" max="300000" step="5000" value="70000" style="accent-color:#a5d6a7" oninput="calcEF()">
-      <div class="slm"><span>\u20b910K</span><span>\u20b93L</span></div>
-    </div>
-    <div class="sw">
-      <div class="sr"><span class="sl">Coverage Target</span><span class="sv" id="vEfMonths" style="color:#a5d6a7">6 months</span></div>
-      <input type="range" id="sEfMonths" min="3" max="12" step="1" value="6" style="accent-color:#a5d6a7" oninput="calcEF()">
-      <div class="slm"><span>3 months</span><span>12 months</span></div>
-    </div>
-    <div class="sw">
-      <div class="sr"><span class="sl">Already Saved</span><span class="sv" id="vEfSaved" style="color:#4fc3f7">\u20b90</span></div>
-      <input type="range" id="sEfSaved" min="0" max="2000000" step="10000" value="0" style="accent-color:#4fc3f7" oninput="calcEF()">
-      <div class="slm"><span>\u20b90</span><span>\u20b920L</span></div>
-    </div>
-    <div class="sw">
-      <div class="sr"><span class="sl">Build Fund In</span><span class="sv" id="vEfTime" style="color:#f9a825">12 months</span></div>
-      <input type="range" id="sEfTime" min="3" max="36" step="1" value="12" style="accent-color:#f9a825" oninput="calcEF()">
-      <div class="slm"><span>3 months</span><span>36 months</span></div>
-    </div>
-    <div class="pw" style="margin-top:4px">
-      <div class="pt"><span style="font-size:10px;color:#8899aa">Fund Progress</span><span style="font-size:9px;color:#a5d6a7" id="efPct">0% built</span></div>
-      <div class="ptrack"><div class="pfill" id="efBar" style="width:0%;background:linear-gradient(90deg,#a5d6a788,#a5d6a7)"></div></div>
-      <div class="pb"><span id="efCurLbl">Saved: \u20b90</span><span id="efTgtLbl">Target: \u2014</span></div>
-    </div>
-    <div class="dtbl" style="margin-top:13px">
-      <div class="dlbl">Emergency Fund Breakdown</div>
-      <div class="drow"><span class="dk">Monthly Expenses</span><span class="dv" id="efRowExp">\u2014</span></div>
-      <div class="drow"><span class="dk">Coverage Target</span><span class="dv" id="efRowMonths">\u2014</span></div>
-      <div class="drow"><span class="dk">Total Fund Required</span><span class="dv" style="color:#a5d6a7" id="efRowTarget">\u2014</span></div>
-      <div class="drow"><span class="dk">Already Saved</span><span class="dv" style="color:#4fc3f7" id="efRowSaved">\u2014</span></div>
-      <div class="drow"><span class="dk">Balance to Build</span><span class="dv" id="efRowGap">\u2014</span></div>
-      <div class="drow"><span class="dk">Build In</span><span class="dv" id="efRowTime">\u2014</span></div>
-      <div class="drow"><span class="dk" style="color:#e8f4ff;font-weight:700">Monthly SIP Needed</span><span class="dv" style="color:#f9a825;font-size:13px" id="efRowSIP">\u2014</span></div>
-    </div>
-    <div class="ins" style="background:#07111c;border:1px solid #a5d6a722">
-      <div class="ins-t" style="color:#a5d6a7">\ud83d\udca1 Where to Park Emergency Funds</div>
-      <p>\u2022 <b>Liquid Mutual Funds</b> \u2014 instant redemption, ~6\u20137% returns (better than savings a/c)<br>\u2022 <b>High-yield Savings A/C</b> \u2014 3.5\u20137% with zero lock-in (Kotak, DBS, IDFC First)<br>\u2022 <b>Ultra Short-term / Overnight Funds</b> \u2014 very low risk, T+1 redemption<br>\u2022 <b>Sweep-in FD</b> \u2014 auto-breaks on withdrawal, earns FD rate<br><br>\u274c Never park emergency funds in equity, crypto, or lock-in products.</p>
+    <div class="ins">
+      <div class="t" style="color:#ef5350">💡 Insight</div>
+      <p id="fInsight">—</p>
     </div>
   </div>
 </div>
 
-<!-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 ACTION PLAN \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 -->
-<div class="panel" id="p-plan">
-  <div class="card" style="border-color:#a5d6a733;border-left-color:#a5d6a7">
-    <div class="ctitle"><span class="ico">\ud83d\udccb</span><h2 style="color:#a5d6a7">Monthly Investment Action Plan</h2></div>
-    <div class="dtbl" style="margin-top:0">
-      <div class="drow"><span class="dk">Retirement SIP</span><span class="dv" style="color:#4fc3f7" id="apRetire">\u2014</span></div>
-      <div class="drow" id="apChildRow"><span class="dk">All Child Goals SIP</span><span class="dv" style="color:#f9a825" id="apChild">\u2014</span></div>
-      <div class="drow"><span class="dk">Emergency Fund SIP</span><span class="dv" style="color:#a5d6a7" id="apEmergency">\u2014</span></div>
-      <div class="drow"><span class="dk" style="color:#e8f4ff;font-weight:700">Total Committed</span><span class="dv" style="color:#ef5350;font-size:13px" id="apTotal">\u2014</span></div>
-      <div class="drow" style="border-bottom:none"><span class="dk">Remaining / Flexible</span><span class="dv" id="apRemaining">\u2014</span></div>
-    </div>
-    <div class="cht" style="margin-top:13px">
-      <div class="cht-t">Where Every Rupee Goes</div>
-      <canvas id="cvPlan" height="20" style="width:100%;border-radius:6px;overflow:hidden"></canvas>
-      <div id="lgPlan" style="display:flex;flex-wrap:wrap;gap:5px 10px;margin-top:7px"></div>
-    </div>
-  </div>
-</div>
-
-<div class="disc">\u26a0\ufe0f <b>Disclaimer:</b> This planner uses standard financial formulas. Actual returns vary. Consult a SEBI-registered financial advisor before investing.</div>
-</div><!-- /wrap -->
-
-<script>
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-// HELPERS
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-function f(v) {
-  v = v || 0;
-  if (v >= 10000000) return '\u20b9' + (v/10000000).toFixed(2) + ' Cr';
-  if (v >= 100000)   return '\u20b9' + (v/100000).toFixed(1) + 'L';
-  if (v >= 1000)     return '\u20b9' + (v/1000).toFixed(1) + 'K';
-  return '\u20b9' + Math.round(v);
-}
-const el  = id => document.getElementById(id);
-const txt = (id, v) => { var e = el(id); if (e) e.textContent = v; };
-const num = id => { var e = el(id); return e ? (parseFloat(e.value) || 0) : 0; };
-
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-// TABS
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-function tab(name) {
-  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('on'); });
-  document.querySelectorAll('.tb').forEach(function(b){ b.classList.remove('on'); });
-  var p = el('p-' + name);
-  if (p) p.classList.add('on');
-  document.querySelectorAll('.tb').forEach(function(b){
-    if (b.getAttribute('onclick') === "tab('" + name + "')") b.classList.add('on');
-  });
-  setTimeout(calc, 0);
-}
-
-function onAge(v) {
-  v = parseInt(v);
-  var rs = el('sRetireAge');
-  if (rs && parseInt(rs.value) <= v) rs.value = v + 5;
-  calc();
-}
-
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-// CHILD LOGIC
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-var planChild = true;
-var numKids   = 1;
-
-function toggleChild() {
-  planChild = !planChild;
-  var btn = el('childBtn');
-  btn.style.background = planChild ? '#f9a825' : '#1a2535';
-  btn.style.color       = planChild ? '#000'    : '#667788';
-  btn.textContent       = planChild ? 'YES'     : 'NO';
-  el('childContent').style.display = planChild ? 'block' : 'none';
-  el('prChildWrap').style.display  = planChild ? 'block' : 'none';
-  el('apChildRow').style.display   = planChild ? 'flex'  : 'none';
-  calc();
-}
-
-function setKids(n) {
-  numKids = n;
-  [1,2,3,4].forEach(function(i){
-    var b = el('nc' + i);
-    if (b) { b.style.background = i===n ? '#f9a825':'#111e2b'; b.style.color = i===n ? '#000':'#556677'; }
-  });
-  buildKidCards();
-  calc();
-}
-
-function buildKidCards() {
-  var con = el('kidCards');
-  if (!con) return;
-  var colors = ['#f9a825','#4fc3f7','#a5d6a7','#ce93d8'];
-  var names  = ['Child 1','Child 2','Child 3','Child 4'];
-  var html   = '';
-  for (var i = 1; i <= numKids; i++) {
-    var c = colors[i-1];
-    html += '<div style="background:#07111c;border:1px solid '+c+'33;border-left:3px solid '+c+';border-radius:12px;padding:15px 17px;margin-bottom:13px">';
-    html += '<div style="font-size:12px;font-weight:700;color:'+c+';letter-spacing:.05em;text-transform:uppercase;margin-bottom:11px">\ud83d\udc76 '+names[i-1]+'</div>';
-
-    // Age
-    html += '<div class="sw"><div class="sr"><span class="sl">Current Age (0 = not yet born)</span><span class="sv" id="lc'+i+'_age" style="color:'+c+'">0 \u2014 not born</span></div>';
-    html += '<input type="range" id="kc'+i+'_age" min="0" max="15" step="1" value="0" style="accent-color:'+c+'" oninput="calc()">';
-    html += '<div class="slm"><span>0</span><span>15</span></div></div>';
-
-    // Years until born
-    html += '<div id="kb'+i+'" class="sw"><div class="sr"><span class="sl">Years until born</span><span class="sv" id="lc'+i+'_yrs" style="color:'+c+'">2 yrs</span></div>';
-    html += '<input type="range" id="kc'+i+'_yrs" min="1" max="5" step="1" value="2" style="accent-color:'+c+'" oninput="calc()">';
-    html += '<div class="slm"><span>1 yr</span><span>5 yrs</span></div></div>';
-
-    // School
-    html += '<div class="sdiv" style="color:#ffd54f">\ud83d\udcda School</div>';
-    html += '<div class="sw"><div class="sr"><span class="sl">School Start Age</span><span class="sv" id="lc'+i+'_ss" style="color:#ffd54f">Age 3</span></div>';
-    html += '<input type="range" id="kc'+i+'_ss" min="3" max="6" step="1" value="3" style="accent-color:#ffd54f" oninput="calc()">';
-    html += '<div class="slm"><span>3</span><span>6</span></div></div>';
-
-    html += '<div class="sw"><div class="sr"><span class="sl">Annual Fees (Today)</span><span class="sv" id="lc'+i+'_sf" style="color:#ffd54f">\u20b91L/yr</span></div>';
-    html += '<input type="range" id="kc'+i+'_sf" min="30000" max="2000000" step="10000" value="100000" style="accent-color:#ffd54f" oninput="calc()">';
-    html += '<div class="slm"><span>\u20b930K</span><span>\u20b920L</span></div></div>';
-
-    html += '<div class="sw"><div class="sr"><span class="sl">School Duration</span><span class="sv" id="lc'+i+'_sd" style="color:#ffd54f">12 yrs</span></div>';
-    html += '<input type="range" id="kc'+i+'_sd" min="10" max="14" step="1" value="12" style="accent-color:#ffd54f" oninput="calc()">';
-    html += '<div class="slm"><span>10</span><span>14</span></div></div>';
-
-    // University
-    html += '<div class="sdiv" style="color:#29b6f6">\ud83c\udf93 University</div>';
-    html += '<div class="sw"><div class="sr"><span class="sl">Total Cost (Today)</span><span class="sv" id="lc'+i+'_uc" style="color:#29b6f6">\u20b920L</span></div>';
-    html += '<input type="range" id="kc'+i+'_uc" min="200000" max="30000000" step="100000" value="2000000" style="accent-color:#29b6f6" oninput="calc()">';
-    html += '<div class="slm"><span>\u20b92L</span><span>\u20b93Cr</span></div></div>';
-
-    // Marriage
-    html += '<div class="sdiv" style="color:#ce93d8">\ud83d\udc8d Marriage</div>';
-    html += '<div class="sw"><div class="sr"><span class="sl">Cost (Today)</span><span class="sv" id="lc'+i+'_mc" style="color:#ce93d8">\u20b930L</span></div>';
-    html += '<input type="range" id="kc'+i+'_mc" min="200000" max="10000000" step="100000" value="3000000" style="accent-color:#ce93d8" oninput="calc()">';
-    html += '<div class="slm"><span>\u20b92L</span><span>\u20b91Cr</span></div></div>';
-
-    // Mini chart
-    html += '<div class="cht-t" style="margin-top:10px">Monthly SIP \u2014 '+names[i-1]+'</div>';
-    html += '<canvas id="kv'+i+'_chart" height="66" style="width:100%;margin-bottom:7px"></canvas>';
-
-    // Results
-    html += '<div style="background:#060e18;border-radius:8px;padding:11px">';
-    html += '<div style="color:#445566;font-size:9px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px">Corpus &amp; SIP</div>';
-    html += '<div class="drow"><span class="dk">Status</span><span class="dv" id="kr'+i+'_status">\u2014</span></div>';
-    html += '<div class="drow"><span class="dk" style="color:#ffd54f">\ud83d\udcda School Corpus</span><span class="dv" style="color:#ffd54f" id="kr'+i+'_sc">\u2014</span></div>';
-    html += '<div class="drow"><span class="dk" style="color:#667788">&nbsp; School SIP/mo</span><span class="dv" style="color:#ffd54f" id="kr'+i+'_ss">\u2014</span></div>';
-    html += '<div class="drow"><span class="dk" style="color:#29b6f6">\ud83c\udf93 Univ Corpus</span><span class="dv" style="color:#29b6f6" id="kr'+i+'_uc">\u2014</span></div>';
-    html += '<div class="drow"><span class="dk" style="color:#667788">&nbsp; Univ SIP/mo</span><span class="dv" style="color:#29b6f6" id="kr'+i+'_us">\u2014</span></div>';
-    html += '<div class="drow"><span class="dk" style="color:#ce93d8">\ud83d\udc8d Marriage Corpus</span><span class="dv" style="color:#ce93d8" id="kr'+i+'_mc">\u2014</span></div>';
-    html += '<div class="drow"><span class="dk" style="color:#667788">&nbsp; Marriage SIP/mo</span><span class="dv" style="color:#ce93d8" id="kr'+i+'_ms">\u2014</span></div>';
-    html += '<div class="drow" style="border-bottom:none"><span class="dk" style="color:#e8f4ff;font-weight:700">Total SIP/mo</span><span class="dv" style="color:'+c+';font-size:14px;font-weight:800" id="kr'+i+'_tot">\u2014</span></div>';
-    html += '</div></div>';
-  }
-  con.innerHTML = html;
-}
-
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-// EMERGENCY FUND
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-function calcEF() {
-  var exp    = num('sEfExp');
-  var months = num('sEfMonths');
-  var saved  = num('sEfSaved');
-  var time   = num('sEfTime');
-  var target = exp * months;
-  var gap    = Math.max(target - saved, 0);
-  var sip    = time > 0 ? gap / time : gap;
-  var pct    = target > 0 ? Math.min((saved / target) * 100, 100) : 0;
-
-  txt('efTarget',    f(target));
-  txt('efTargetSub', months + ' months of expenses');
-  txt('efSavedM',    f(saved));
-  txt('efSIPm',      f(sip));
-  txt('vEfExp',      f(exp));
-  txt('vEfMonths',   months + ' months');
-  txt('vEfSaved',    f(saved));
-  txt('vEfTime',     time + ' months');
-  txt('efPct',       pct.toFixed(0) + '% built');
-  txt('efCurLbl',    'Saved: ' + f(saved));
-  txt('efTgtLbl',    'Target: ' + f(target));
-  txt('efRowExp',    f(exp) + '/mo');
-  txt('efRowMonths', months + ' months');
-  txt('efRowTarget', f(target));
-  txt('efRowSaved',  f(saved));
-  txt('efRowGap',    f(gap));
-  txt('efRowTime',   time + ' months');
-  txt('efRowSIP',    f(sip) + '/mo');
-
-  var bar = el('efBar');
-  if (bar) bar.style.width = pct.toFixed(1) + '%';
-  return sip;
-}
-
-function getEFSIP() { return calcEF(); }
-
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-// CANVAS UTILS
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-function cW(canvas) {
-  return Math.max(canvas.offsetWidth || (canvas.parentElement ? canvas.parentElement.offsetWidth : 300), 100);
-}
-
-function drawBars(id, segs) {
-  var cv = el(id); if (!cv) return;
-  var W = cW(cv); cv.width = W;
-  var ctx = cv.getContext('2d');
-  var rowH = 20, gap = 2;
-  cv.height = segs.length * (rowH + gap);
-  ctx.clearRect(0, 0, W, cv.height);
-  var total = 0;
-  segs.forEach(function(s){ total += (s.v||0); });
-  if (!total) total = 1;
-  var lW = 120, vW = 68, bW = Math.max(W - lW - vW - 6, 30);
-  segs.forEach(function(s, i) {
-    var y = i * (rowH + gap);
-    ctx.font = '10px DM Mono,monospace'; ctx.fillStyle = '#8899aa';
-    ctx.fillText(s.l, 0, y + 14);
-    ctx.fillStyle = '#1a2535';
-    rr(ctx, lW, y+5, bW, 10, 5); ctx.fill();
-    var fw = Math.max(((s.v||0)/total)*bW, (s.v||0)>0?3:0);
-    if (fw > 0) {
-      var gr = ctx.createLinearGradient(lW,0,lW+fw,0);
-      gr.addColorStop(0, s.c+'88'); gr.addColorStop(1, s.c);
-      ctx.fillStyle = gr; rr(ctx, lW, y+5, fw, 10, 5); ctx.fill();
-    }
-    ctx.font = 'bold 10px DM Mono,monospace'; ctx.fillStyle = s.c;
-    ctx.fillText(f(s.v||0), lW+bW+5, y+14);
-  });
-}
-
-function rr(ctx, x, y, w, h, r) {
-  ctx.beginPath();
-  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
-  ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
-  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
-  ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y); ctx.closePath();
-}
-
-function drawStacked(id, segs) {
-  var cv = el(id); if (!cv) return;
-  var W = cW(cv); cv.width = W;
-  var H = cv.height;
-  var ctx = cv.getContext('2d');
-  ctx.clearRect(0, 0, W, H);
-  var total = 0;
-  segs.forEach(function(s){ total += (s.v||0); });
-  if (!total) return;
-  var x = 0;
-  segs.forEach(function(s) {
-    var w = ((s.v||0)/total)*W;
-    ctx.fillStyle = s.c; ctx.fillRect(x, 0, w, H);
-    if (w > 25) {
-      ctx.font = 'bold 9px DM Mono,monospace'; ctx.fillStyle = '#000';
-      ctx.fillText(Math.round((s.v/total)*100)+'%', x+4, H/2+4);
-    }
-    x += w;
-  });
-}
-
-function drawLine(id, pts, color, target) {
-  var cv = el(id); if (!cv || !pts || pts.length < 2) return;
-  var W = cW(cv); cv.width = W;
-  var ctx = cv.getContext('2d');
-  var H = cv.height;
-  ctx.clearRect(0,0,W,H);
-  var pL=58, pR=14, pT=10, pB=26;
-  var maxV = 0;
-  pts.forEach(function(p){ if(p.y>maxV) maxV=p.y; });
-  if (target && target > maxV) maxV = target;
-  if (!maxV) maxV = 1;
-  var xS = (W-pL-pR)/(pts.length-1||1);
-  var yS = (H-pT-pB)/maxV;
-  var tx = function(i){ return pL + i*xS; };
-  var ty = function(v){ return H - pB - v*yS; };
-
-  // Grid lines
-  for (var j=0; j<=4; j++) {
-    var gy = H - pB - (j/4)*(H-pT-pB);
-    ctx.strokeStyle='#1a2535'; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.moveTo(pL,gy); ctx.lineTo(W-pR,gy); ctx.stroke();
-    ctx.font='9px DM Mono,monospace'; ctx.fillStyle='#445566';
-    ctx.fillText(f((j/4)*maxV), 0, gy+3);
-  }
-
-  // Target dashed line
-  if (target) {
-    var tY = ty(target);
-    ctx.setLineDash([4,4]); ctx.strokeStyle='#ef535066'; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.moveTo(pL,tY); ctx.lineTo(W-pR,tY); ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.font='9px DM Mono,monospace'; ctx.fillStyle='#ef5350';
-    ctx.fillText('Target', W-pR-36, tY-3);
-  }
-
-  // Area
-  ctx.beginPath(); ctx.moveTo(tx(0),ty(pts[0].y));
-  pts.forEach(function(p,i){ ctx.lineTo(tx(i),ty(p.y)); });
-  ctx.lineTo(tx(pts.length-1),H-pB); ctx.lineTo(tx(0),H-pB); ctx.closePath();
-  var gr = ctx.createLinearGradient(0,pT,0,H-pB);
-  gr.addColorStop(0,color+'44'); gr.addColorStop(1,color+'00');
-  ctx.fillStyle=gr; ctx.fill();
-
-  // Line
-  ctx.beginPath(); ctx.moveTo(tx(0),ty(pts[0].y));
-  pts.forEach(function(p,i){ ctx.lineTo(tx(i),ty(p.y)); });
-  ctx.strokeStyle=color; ctx.lineWidth=2; ctx.stroke();
-
-  // X labels
-  ctx.font='9px DM Mono,monospace'; ctx.fillStyle='#445566';
-  var step = Math.max(1, Math.floor(pts.length/6));
-  pts.forEach(function(p,i){
-    if (i%step===0 || i===pts.length-1) ctx.fillText('Y'+p.x, tx(i)-7, H-6);
-  });
-}
-
-function makeLegend(id, segs) {
-  var lg = el(id); if (!lg) return;
-  lg.innerHTML = segs.map(function(s){
-    return '<div style="display:flex;align-items:center;gap:5px;font-size:10px;color:#8899aa">'
-      + '<div style="width:8px;height:8px;border-radius:2px;background:'+s.c+'"></div>'
-      + '<span>'+s.l+': <b style="color:'+s.c+'">'+f(s.v||0)+'</b></span></div>';
-  }).join('');
-}
-
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-// MAIN CALC
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-function calc() {
-  var age        = num('sAge');
-  var retireAge  = num('sRetireAge');
-  var lifeExp    = 85;
-  var income     = num('sIncome');
-  var savPct     = num('sSavPct');
-  var inflation  = num('sInflation');
-  var retRate    = num('sReturn');
-  var postRate   = num('sPostReturn');
-  var existing   = num('sExisting');
-  var monthExp   = num('sMonthExp');
-  var fireSavPct = num('sFireSav');
-
-  var ytr   = Math.max(retireAge - age, 1);
-  var retYrs= Math.max(lifeExp - retireAge, 1);
-  var savings = income * savPct / 100;
-  var mRate   = retRate / 100 / 12;
-  var mos     = ytr * 12;
-  var fvFact  = mos > 0 ? (Math.pow(1+mRate,mos)-1)/mRate*(1+mRate) : 1;
-
-  // \u2500\u2500 Retirement \u2500\u2500
-  var futExp    = monthExp * Math.pow(1+inflation/100, ytr);
-  var annExp    = futExp * 12;
-  var realRet   = (postRate - inflation) / 100;
-  var retCorpus = realRet > 0
-    ? annExp * ((1 - Math.pow(1+realRet,-retYrs)) / realRet)
-    : annExp * retYrs;
-  var corpFV    = existing * Math.pow(1+retRate/100, ytr);
-  var shortfall = Math.max(retCorpus - corpFV, 0);
-  var sipRet    = fvFact > 0 ? shortfall / fvFact : 0;
-
-  // \u2500\u2500 Child goals \u2500\u2500
-  var totChildSIP=0, totSchoolSIP=0, totUnivSIP=0, totMarriSIP=0;
-  if (planChild) {
-    for (var i=1; i<=numKids; i++) {
-      var cAge  = num('kc'+i+'_age');
-      var cYrs  = num('kc'+i+'_yrs');
-      var ss    = num('kc'+i+'_ss');
-      var sf    = num('kc'+i+'_sf');
-      var sd    = num('kc'+i+'_sd');
-      var uc    = num('kc'+i+'_uc');
-      var mc    = num('kc'+i+'_mc');
-
-      var born  = cAge===0 ? cYrs : 0;
-      var yts   = Math.max((ss-cAge)+born, 0.5);
-      var ytu   = Math.max((18-cAge)+born, 1);
-      var ytm   = Math.max((25-cAge)+born, 1);
-
-      var annSch = sf * Math.pow(1+inflation/100, yts);
-      var sr     = Math.max((retRate-inflation)/100, 0.01);
-      var schC   = annSch * ((1-Math.pow(1+sr,-sd))/sr);
-      var uniC   = uc * Math.pow(1+inflation/100, ytu);
-      var marC   = mc * Math.pow(1+inflation/100, ytm);
-
-      function sipFor(corpus, yrs) {
-        var n  = Math.max(yrs*12, 1);
-        var fv = (Math.pow(1+mRate,n)-1)/mRate*(1+mRate);
-        return fv>0 ? corpus/fv : 0;
-      }
-      var sS = sipFor(schC, yts);
-      var sU = sipFor(uniC, ytu);
-      var sM = sipFor(marC, ytm);
-      var sT = sS+sU+sM;
-
-      totSchoolSIP += sS; totUnivSIP += sU; totMarriSIP += sM;
-      totChildSIP  += sT;
-
-      // labels
-      txt('lc'+i+'_age', cAge===0 ? '0 \u2014 not born' : cAge+' yrs old');
-      txt('lc'+i+'_yrs', cYrs+' yr'+(cYrs>1?'s':'')+' from now');
-      txt('lc'+i+'_ss',  'Age '+ss);
-      txt('lc'+i+'_sf',  f(sf)+'/yr');
-      txt('lc'+i+'_sd',  sd+' yrs');
-      txt('lc'+i+'_uc',  f(uc));
-      txt('lc'+i+'_mc',  f(mc));
-
-      // results
-      txt('kr'+i+'_status', cAge===0 ? 'Not born (in '+cYrs+' yr'+( cYrs>1?'s':'')+')'  : cAge+' yrs old');
-      txt('kr'+i+'_sc', f(schC)+' needed');
-      txt('kr'+i+'_ss', f(sS)+'/mo');
-      txt('kr'+i+'_uc', f(uniC)+' needed');
-      txt('kr'+i+'_us', f(sU)+'/mo');
-      txt('kr'+i+'_mc', f(marC)+' needed');
-      txt('kr'+i+'_ms', f(sM)+'/mo');
-      txt('kr'+i+'_tot',f(sT)+'/mo');
-
-      var bw = el('kb'+i);
-      if (bw) bw.style.display = cAge===0 ? 'block':'none';
-
-      // mini chart
-      (function(idx, s1, s2, s3){ setTimeout(function(){
-        drawBars('kv'+idx+'_chart',[
-          {l:'\ud83d\udcda School',  v:s1, c:'#ffd54f'},
-          {l:'\ud83c\udf93 Univ',    v:s2, c:'#29b6f6'},
-          {l:'\ud83d\udc8d Marriage',v:s3, c:'#ce93d8'}
-        ]);
-      },0); })(i, sS, sU, sM);
-    }
-  }
-
-  // Child summary
-  var kidSum = el('kidSummary');
-  if (kidSum) {
-    kidSum.innerHTML =
-      '<div class="drow"><span class="dk" style="color:#ffd54f">\ud83d\udcda Total School SIP</span><span class="dv" style="color:#ffd54f">'+f(totSchoolSIP)+'/mo</span></div>'+
-      '<div class="drow"><span class="dk" style="color:#29b6f6">\ud83c\udf93 Total Univ SIP</span><span class="dv" style="color:#29b6f6">'+f(totUnivSIP)+'/mo</span></div>'+
-      '<div class="drow"><span class="dk" style="color:#ce93d8">\ud83d\udc8d Total Marriage SIP</span><span class="dv" style="color:#ce93d8">'+f(totMarriSIP)+'/mo</span></div>'+
-      '<div class="drow" style="border-top:1px solid #1a2535;padding-top:7px;margin-top:3px"><span class="dk" style="color:#e8f4ff;font-weight:700">\ud83e\uddee Grand Total SIP</span><span class="dv" style="color:#f9a825;font-size:14px;font-weight:800">'+f(totChildSIP)+'/mo</span></div>';
-  }
-  if (totChildSIP>0) {
-    setTimeout(function(){
-      drawStacked('cvKidSplit',[
-        {v:totSchoolSIP,c:'#ffd54f'},
-        {v:totUnivSIP,  c:'#29b6f6'},
-        {v:totMarriSIP, c:'#ce93d8'}
-      ]);
-    },0);
-  }
-
-  // \u2500\u2500 FIRE \u2500\u2500
-  var fireC = annExp * 25;
-  var sipFire = Math.max((fireC - corpFV)/fvFact, 0);
-
-  // \u2500\u2500 Totals \u2500\u2500
-  var efSIP    = getEFSIP();
-  var totalSIP = sipRet + (planChild ? totChildSIP : 0) + efSIP;
-  var surplus  = savings - totalSIP;
-
-  // \u2500\u2500 Header pills \u2500\u2500
-  txt('pAge',    age+' yrs');
-  txt('pIncome', f(income)+'/mo');
-  txt('pSavings',f(savings)+'/mo');
-  txt('pSIP',    f(totalSIP)+'/mo');
-  txt('hdrSub',  'Age '+age+' \u00b7 All values update live');
-
-  // \u2500\u2500 Slider labels \u2500\u2500
-  txt('vAge',       age+' years old');
-  txt('vIncome',    f(income));
-  txt('vSavPct',    savPct+'% = '+f(savings));
-  txt('vInflation', inflation+'%');
-  txt('vReturn',    retRate+'%');
-  txt('vPostReturn',postRate+'%');
-  txt('vExisting',  f(existing));
-  txt('vRetireAge', 'Age '+retireAge+' ('+ytr+' yrs away)');
-  txt('vMonthExp',  f(monthExp));
-  txt('vFireSav',   fireSavPct+'% = '+f(income*fireSavPct/100)+'/mo');
-
-  // \u2500\u2500 Overview snapshot \u2500\u2500
-  txt('snpRetire', 'Age '+retireAge);
-  txt('snpYrs',    ytr+' yrs away');
-  txt('snpCorpus', f(retCorpus));
-  txt('snpSIP',    f(totalSIP));
-
-  var rpct = retCorpus>0 ? Math.min((corpFV/retCorpus)*100,100) : 0;
-  var rb = el('prRetBar');
-  if (rb) rb.style.width = rpct.toFixed(1)+'%';
-  txt('prRetPct', rpct.toFixed(0)
+<!-- ===== EMERGENCY FUND ===== -->
+<div class="panel" id="tab-emergency">
+  <div class="card" style="border-left-color:#a5d6a7">
+    <div style="font-size:12px;font-weight:700;color:#a5d6a7;margin-bottom:12px">🛡️ EMERGENCY FUND PLANNER</div>
+    <div class="mrow">
+      <div class="mbox"><div class="lbl">Target Fund</div><div class="val" style="color:#a5d6a7" id="efTarget">—</div><div class="sub" id="efTargetSub">6 months expenses</div></div>
+      <div class="mbox"><div class="lbl">Already Saved</div><div class="val" style="
